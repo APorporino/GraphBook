@@ -1,5 +1,5 @@
 @tag
-Feature: Create User Account
+Feature: Add Profile Picture
 
   As a university student
   I would like to add a profile picture for my GraphBook profile
