@@ -19,9 +19,9 @@ Feature: Define Relationship with another user
     Then The GraphBook system overwrites the previous relationship with the new one 
     
   @tag3
-  Scenario Outline: Redefine a (strong,medium or none) relationship with user X (Error Flow)
+  Scenario Outline: Define or redefine a (strong,medium or none) relationship with user X (Error Flow) with no internet
     Given A logged in user selects another user X
-    And A relationship definition already exists
-    When They redefine their relationship with that user (strong/medium/none)
-    Then The GraphBook system overwrites the previous relationship with the new one 
+    And There is no access to the database(no connection)
+    When They define or redefine their relationship with another user (strong/medium/none)
+    Then The GraphBook system detects that the database cannot be reached and gives an error message
 
