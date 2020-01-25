@@ -2,7 +2,7 @@
 
 Feature: Logout
 
-  As a user of the GraphBook, I would like to be able to logout from GraphBook so that I am no longer seen as available by
+  As a user of GraphBook, I would like to be able to logout from GraphBook so that I am no longer seen as available by
   other users
 
   Background:
@@ -13,5 +13,5 @@ Feature: Logout
       Given the user is logged into GraphBook
       When the user requests to logout
       Then the system logs the user out
-      And the user's session is terminated
+      And the session of the user is terminated
       And the login page is displayed
