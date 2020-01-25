@@ -13,4 +13,5 @@ Feature: Logout
       Given the user is logged into GraphBook
       When the user requests to logout
       Then the system logs the user out
+      And the user's session is terminated
       And the login page is displayed
