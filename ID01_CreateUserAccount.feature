@@ -1,8 +1,8 @@
 Feature: Create User Account
 
-As a 
-I would 
-So that 
+As a university student
+I would like to become a user of GraphBook.
+So that I can 
 
 Scenario Outline: (Normal Flow)
 
