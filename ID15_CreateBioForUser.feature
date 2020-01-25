@@ -20,7 +20,7 @@ So that other users can know a little more about another user
     When a user submits the form
     Then the user's previously saved bio is replaced with a blank value
     
-    
+     
   @tag3
   Scenario Outline: (Alternate Flow)
     Given a user enters a bio
