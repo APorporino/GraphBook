@@ -31,5 +31,5 @@ dependencies {
 
 task stage () {
 
-	dependsOn ':graphbook-backend:assemble'
+	dependsOn ':GraphBook-Backend:assemble'
 }
