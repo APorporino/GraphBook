@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse428.graphbook.model.Course;
 import ca.mcgill.ecse428.graphbook.model.CourseOffering;
+import ca.mcgill.ecse428.graphbook.model.Edge;
+import ca.mcgill.ecse428.graphbook.model.Edge.Status;
 import ca.mcgill.ecse428.graphbook.model.Student;
 
 @Service
@@ -73,6 +75,7 @@ public class GraphBookService {
 		
 		courseOffering = new CourseOffering();
 		courseOffering.setSemester(semester);
+		courseOffering.setCreatedDate(createdDate);
 		
 		/*
 		 * TODO
@@ -80,6 +83,32 @@ public class GraphBookService {
 		 */
 		
 		return courseOffering;
+		
+	}
+	
+	@Transactional
+	public Edge createEdge(Student follower, Student followee, Status status, int weight, Date createdDate) {
+		
+		Edge edge;
+		
+		/*
+		 * TODO
+		 * Error checking
+		 */
+		
+		edge = new Edge();
+		edge.setFollower(follower);
+		edge.setFollowee(followee);
+		edge.setStatus(status);
+		edge.setWeight(weight);
+		edge.setCreatedDate(createdDate);
+		
+		/*
+		 * TODO
+		 * Save in the repository
+		 */
+		
+		return edge;
 		
 	}
 }
