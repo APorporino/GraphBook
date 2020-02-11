@@ -1,5 +1,6 @@
 package ca.mcgill.ecse428.graphbook.model;
 
+import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -10,17 +11,17 @@ import javax.persistence.ManyToOne;
 
 
 @Entity
-public class SpecificCourse {
+public class CourseOffering {
 	
-	private long specificCourseID;
+	private long courseOfferingId;
 
 	@Id @GeneratedValue
-	public long getSpecificCourseID() {
-	    return this.specificCourseID;
+	public long getCourseOfferingId() {
+	    return this.courseOfferingId;
 	}
 	
-	public void setSpecificCourseID(long value) {
-	    this.specificCourseID = value;
+	public void setCourseOfferingId(long courseOfferingId) {
+	    this.courseOfferingId = courseOfferingId;
 	}
 	
 	private String semester;
@@ -53,5 +54,15 @@ public class SpecificCourse {
 
 	public void setStudents(Set<Student> students) {
 		this.students = students;
+	}
+	
+	private Date createdDate;
+
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 }

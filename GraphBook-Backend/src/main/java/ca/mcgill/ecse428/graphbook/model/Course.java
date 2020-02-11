@@ -9,15 +9,15 @@ import javax.persistence.OneToMany;
 @Entity
 public class Course {
 	
-	private String courseID;
+	private String courseId;
 
-	public void setCourseID(String courseID) {
-		this.courseID = courseID;
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
 	}
 	
 	@Id
-	public String getCourseID() {
-		return this.courseID;
+	public String getCourseId() {
+		return this.courseId;
 	}
 	
 	private String name;
@@ -30,15 +30,15 @@ public class Course {
 		return this.name;
 	}
 	
-	private Set<SpecificCourse> specificCourse;
+	private Set<CourseOffering> courseOfferings;
 
 	@OneToMany(mappedBy="course")
-	public Set<SpecificCourse> getSpecificCourse() {
-		return this.specificCourse;
+	public Set<CourseOffering> getCourseOfferings() {
+		return this.courseOfferings;
 	}
 
-	public void setSpecificCourse(Set<SpecificCourse> specificCourses) {
-		this.specificCourse = specificCourses;
+	public void setSpecificCourse(Set<CourseOffering> courseOfferings) {
+		this.courseOfferings = courseOfferings;
 	}
 
 }

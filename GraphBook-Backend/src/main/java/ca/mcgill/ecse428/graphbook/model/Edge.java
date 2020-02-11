@@ -1,5 +1,7 @@
 package ca.mcgill.ecse428.graphbook.model;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -60,6 +62,16 @@ public class Edge {
 
 	public void setWeight(int weight) {
 		this.weight = weight;
+	}
+	
+	private Date createdDate;
+
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 }
