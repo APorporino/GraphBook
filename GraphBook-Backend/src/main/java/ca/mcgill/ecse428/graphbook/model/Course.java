@@ -1,5 +1,6 @@
 package ca.mcgill.ecse428.graphbook.model;
 
+import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -39,6 +40,16 @@ public class Course {
 
 	public void setSpecificCourse(Set<CourseOffering> courseOfferings) {
 		this.courseOfferings = courseOfferings;
+	}
+	
+	private Date createdDate;
+
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 }

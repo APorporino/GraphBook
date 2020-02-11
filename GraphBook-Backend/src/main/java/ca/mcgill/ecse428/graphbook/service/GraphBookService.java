@@ -38,7 +38,7 @@ public class GraphBookService {
 	}
 	
 	@Transactional
-	public Course createCourse(String courseId, String name) {
+	public Course createCourse(String courseId, String name, Date createdDate) {
 		
 		Course course;
 		
@@ -50,6 +50,7 @@ public class GraphBookService {
 		course = new Course();
 		course.setCourseId(courseId);
 		course.setName(name);
+		course.setCreatedDate(createdDate);
 		
 		/*
 		 * TODO
@@ -61,10 +62,22 @@ public class GraphBookService {
 	}
 	
 	@Transactional
-	public CourseOffering createSpecificCourse() {
+	public CourseOffering createSpecificCourse(String semester, Date createdDate) {
+		
 		CourseOffering courseOffering;
 		
+		/*
+		 * TODO
+		 * Error checking
+		 */
+		
 		courseOffering = new CourseOffering();
+		courseOffering.setSemester(semester);
+		
+		/*
+		 * TODO
+		 * Save in the repository
+		 */
 		
 		return courseOffering;
 		
