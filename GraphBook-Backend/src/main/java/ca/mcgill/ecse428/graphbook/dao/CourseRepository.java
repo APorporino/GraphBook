@@ -8,15 +8,15 @@ import ca.mcgill.ecse428.graphbook.model.Course;
 
 public interface CourseRepository extends CrudRepository<Course, String> {
 	
-	Course findByCourseID(String courseID);
+	List<Course> findAll();
 	
-	List<Course> findBySubject(String subject);
+	Course findByCourseId(String courseId);
 	
-	void deleteByCourseID(String courseID);
+	Course findByName(String name);
 	
-	List<Course> findByLevel(String level);
+	void deleteByCourseId(String courseId);
 	
-	boolean existsByCourseID(String courseID);
+	boolean existsByCourseId(String courseId);
 	
 	void deleteAll();
 }

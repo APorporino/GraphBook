@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.graphbook.service;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,15 +71,82 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Finds all students
+	 * @return List of all student objects in the database
+	 */
+	@Transactional
+	public List<Student> getAllStudents() {
+		List<Student> students = studentRepository.findAll();
+		return students;
+	}
+	
+	/**
 	 * Will find a student by a students unique ID
 	 * 
 	 * @param studentId
 	 * @return Student object corresponding to student with that Id
 	 */
-	public Student getStudentById(long studentId) {
+	@Transactional
+	public Student getStudentByStudentId(long studentId) {
 		
-		Student student = studentRepository.findById(studentId);
-		
+		Student student = studentRepository.findByStudentId(studentId);
+		return student;
+	}
+	
+	/**
+	 * Finds list of students by their first name
+	 * @param firstName
+	 * @return List of student objects
+	 */
+	@Transactional
+	public List<Student> getStudentByFirstName(String firstName) {
+		List<Student> students = studentRepository.findByFirstName(firstName);
+		return students;
+	}
+	
+	/**
+	 * Finds list of students by their last name
+	 * @param lastName
+	 * @return List of student objects
+	 */
+	@Transactional
+	public List<Student> getStudentByLastName(String lastName) {
+		List<Student> students = studentRepository.findByLastName(lastName);
+		return students;
+	}
+	
+	/**
+	 * Finds list of students by firstName and lastName
+	 * @param firstName
+	 * @param lastName
+	 * @return List of student objects
+	 */
+	@Transactional
+	public List<Student> getStudentByFirstNameAndLastName(String firstName, String lastName) {
+		List<Student> students = studentRepository.findByFirstNameAndLastName(firstName, lastName);
+		return students;
+	}
+	
+	/**
+	 * Find student by unique email
+	 * @param email
+	 * @return Student object
+	 */
+	@Transactional
+	public Student getStudentByEmail(String email) {
+		Student student = studentRepository.findByEmail(email);
+		return student;
+	}
+	
+	/**
+	 * Deletes student by student ID
+	 * @param studentId
+	 * @return deleted Student object
+	 */
+	@Transactional
+	public Student deleteStudent(long studentId) {
+		Student student = studentRepository.findByStudentId(studentId);
+		studentRepository.delete(student);
 		return student;
 	}
 	
@@ -116,6 +184,52 @@ public class GraphBookService {
 		
 	}
 	
+	/**
+	 * Find All courses
+	 * @return List of Course objects
+	 */
+	@Transactional
+	public List<Course> getAllCourses() {
+		List<Course> courses = courseRepository.findAll();
+		return courses;
+	}
+	
+	/**
+	 * Find course by course ID
+	 * @param courseId
+	 * @return Course Object
+	 */
+	@Transactional
+	public Course getCourseByCourseId(String courseId) {
+		Course course = courseRepository.findByCourseId(courseId);
+		return course;
+	}
+	
+	/**
+	 * Find course by course name
+	 * @param name
+	 * @return Course Object
+	 */
+	@Transactional
+	public Course getCourseByCourseNAme(String name) {
+		Course course = courseRepository.findByName(name);
+		return course;
+	}
+	
+	/**
+	 * Deletes a course by course ID
+	 * @param courseId
+	 * @return deleted Course
+	 */
+	@Transactional
+	public Course deleteCourse(String courseId) {
+		Course course = courseRepository.findByCourseId(courseId);
+		courseRepository.delete(course);
+		return course;
+	}
+	
+	
+	
 	//------COURSE_OFFERING----//
 	
 	/**
@@ -146,6 +260,46 @@ public class GraphBookService {
 		return courseOffering;
 		
 	}
+	
+	/**
+	 * Finds Course Offering By Course Offering Id
+	 * @param courseOfferingId
+	 * @return CourseOffering object
+	 */
+	@Transactional
+	public CourseOffering getCourseOfferingByCourseOfferingId(long courseOfferingId) {
+		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
+		return courseOffering;
+	}
+	
+	/**
+	 * Finds course offering by courseId
+	 * @param courseId
+	 * @return CourseOffering object
+	 */
+	@Transactional
+	public List<CourseOffering> getCourseOfferingByCourseId(String courseId) {
+		Course course = courseRepository.findByCourseId(courseId);
+		if (course != null) {
+			List<CourseOffering> courseOfferings = courseOfferingRepository.findByCourse(course);
+			return courseOfferings;
+		}
+		return null;
+	}
+	
+	/**
+	 * Delete course offering by courseOfferingId
+	 * @param courseOfferingId
+	 * @return deleted Course
+	 */
+	@Transactional
+	public CourseOffering deleteCourseOffering(long courseOfferingId) {
+		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
+		courseOfferingRepository.delete(courseOffering);
+		return courseOffering;
+	}
+	
+	
 	
 	//----------EDGE-----------//
 	

@@ -9,7 +9,7 @@ import ca.mcgill.ecse428.graphbook.model.CourseOffering;
 
 public interface CourseOfferingRepository extends CrudRepository<CourseOffering, Long>{
 	
-	CourseOffering findBySpecificCourseID(Long courseOfferingID);
+	CourseOffering findByCourseOfferingId(Long courseOfferingId);
 
 	List<CourseOffering> findByStudent(String studentUsername);
 	
