@@ -53,7 +53,7 @@ public class GraphBookRestController {
 	 */
 	@PostMapping(value = { "/students/getByStudentId", "/students/getByStudentId/" })
 	public StudentDto getStudentById(@RequestParam("studentId") long studentId) throws IllegalArgumentException {
-		Student student = service.getStudentById(studentId);
+		Student student = service.getStudentByStudentId(studentId);
 		return convertToDto(student);
 		
 	}

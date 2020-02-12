@@ -20,24 +20,24 @@ public class Edge {
 		this.edgeId = edgeId;
 	} 
 	
-	private Student follower;
+	private long followerId;
 	
-	public Student getFollower() {
-		return this.follower;
+	public long getFollowerId() {
+		return this.followerId;
 	}
 
-	public void setFollower(Student follower) {
-		this.follower = follower;
+	public void setFollowerId(long followerId) {
+		this.followerId = followerId;
 	}
 	
-	private Student followee;
+	private long followeeId;
 
-	public Student getFollowee() {
-		return this.followee;
+	public long getFolloweeId() {
+		return this.followeeId;
 	}
 
-	public void setFollowee(Student followee) {
-		this.followee = followee;
+	public void setFolloweeId(long followeeId) {
+		this.followeeId = followeeId;
 	}
 	
 	public enum Status {

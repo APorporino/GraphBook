@@ -75,7 +75,7 @@ public class GraphBookService {
 		else if (password.equals("")) {
 			error += "Password must be specified! ";
 		}
-		if (getStudentById(studentId) != null) {
+		if (getStudentByStudentId(studentId) != null) {
 			error += "Student with that studentId already exists! ";
 		}
 		error = error.trim();
@@ -159,8 +159,8 @@ public class GraphBookService {
 	 * @return Student object
 	 */
 	@Transactional
-	public Student getStudentByEmail(String email) {
-		Student student = studentRepository.findByEmail(email);
+	public Student getStudentByEmail(String emailAddress) {
+		Student student = studentRepository.findByEmailAddress(emailAddress);
 		return student;
 	}
 	
@@ -336,7 +336,7 @@ public class GraphBookService {
 	 * @return the new edge
 	 */
 	@Transactional
-	public Edge createEdge(Student follower, Student followee, Status status, int weight, Date createdDate) {
+	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
 		
 		Edge edge;
 		
@@ -346,8 +346,8 @@ public class GraphBookService {
 		 */
 		
 		edge = new Edge();
-		edge.setFollower(follower);
-		edge.setFollowee(followee);
+		edge.setFollowerId(followerId);
+		edge.setFolloweeId(followeeId);
 		edge.setStatus(status);
 		edge.setWeight(weight);
 		edge.setCreatedDate(createdDate);

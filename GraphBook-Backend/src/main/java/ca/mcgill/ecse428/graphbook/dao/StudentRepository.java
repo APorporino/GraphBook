@@ -14,7 +14,7 @@ public interface StudentRepository extends CrudRepository<Student, Long>{
 
 	List<Student> findByLastName(String lastName);
 
-	Student findByEmail(String email);
+	Student findByEmailAddress(String emailAddress);
 
 	Student findByStudentId(long studentId);
 

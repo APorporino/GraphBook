@@ -67,7 +67,7 @@ public class Student {
 		return this.courseOfferings;
 	}
 	
-	public void setSpecificCourses(Set<CourseOffering> courseOfferings) {
+	public void setCourseOfferings(Set<CourseOffering> courseOfferings) {
 		this.courseOfferings = courseOfferings;
 	}
 	

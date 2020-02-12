@@ -11,17 +11,17 @@ public interface EdgeRepository extends CrudRepository<Edge, Long>{
 	
 	List<Edge> findAll();
 	
-	List<Edge> findByFollower(long followerId);
+	List<Edge> findByFollowerId(long followerId);
 	
-	List<Edge> findByFollowee(long followeeId);
+	List<Edge> findByFolloweeId(long followeeId);
 	
 	Edge findByEdgeId(long edgeId);
 	
 	List<Edge> findByWeight(int weight);
 	
-	Edge findByFollowerAndFollowee(long followerId, long followeeId);
+	Edge findByFollowerIdAndFolloweeId(long followerId, long followeeId);
 	
-	List<Edge> findByStatusAndFollowee(String status, Long followeeId);
+	List<Edge> findByStatusAndFolloweeId(String status, long followeeId);
 	
 	void deleteAll();
 }
