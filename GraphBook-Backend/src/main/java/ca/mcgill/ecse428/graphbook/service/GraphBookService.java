@@ -48,10 +48,39 @@ public class GraphBookService {
 		
 		Student student;
 		
-		/*
-		 * TODO
-		 * Error checking
-		 */
+		String error = "";
+		
+		if(firstName == null) {
+			error += "First name must be specified! ";
+		}
+		else if (firstName.equals("")) {
+			error += "First name must be specified! ";
+		}
+		if(lastName == null) {
+			error += "Last name must be specified! ";
+		}
+		else if (lastName.equals("")) {
+			error += "Last name must be specified! ";
+		}
+		if(emailAddress == null) {
+			error += "Email address must be specified! ";
+		}
+		else if (emailAddress.equals("")) {
+			error += "Email address must be specified! ";
+		}
+		if(password == null) {
+			error += "Password must be specified! ";
+		}
+		else if (password.equals("")) {
+			error += "Password must be specified! ";
+		}
+		if (getStudentById(studentId) != null) {
+			error += "Student with that studentId already exists! ";
+		}
+		error = error.trim();
+		if(error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		
 		student = new Student();
 		student.setFirstName(firstName);
@@ -61,10 +90,7 @@ public class GraphBookService {
 		student.setPassword(password);
 		student.setCreatedDate(createdDate);
 		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
+		studentRepository.save(student);
 		
 		return student;
 	}
@@ -107,10 +133,7 @@ public class GraphBookService {
 		course.setName(name);
 		course.setCreatedDate(createdDate);
 		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
+		courseRepository.save(course);
 		
 		return course;
 		
