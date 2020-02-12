@@ -16,5 +16,7 @@ public interface CourseOfferingRepository extends CrudRepository<CourseOffering,
 	List<CourseOffering> findByCourse(Course course);
 		
 	List<CourseOffering> findAll();
+	
+	void deleteAll();
 
 }

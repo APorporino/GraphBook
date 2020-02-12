@@ -17,4 +17,6 @@ public interface CourseRepository extends CrudRepository<Course, String> {
 	List<Course> findByLevel(String level);
 	
 	boolean existsByCourseID(String courseID);
+	
+	void deleteAll();
 }

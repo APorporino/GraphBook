@@ -22,4 +22,6 @@ public interface EdgeRepository extends CrudRepository<Edge, Long>{
 	Edge findByFollowerAndFollowee(long followerId, long followeeId);
 	
 	List<Edge> findByStatusAndFollowee(String status, Long followeeId);
+	
+	void deleteAll();
 }
