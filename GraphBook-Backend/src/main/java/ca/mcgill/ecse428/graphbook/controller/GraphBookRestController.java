@@ -58,6 +58,15 @@ public class GraphBookRestController {
 		
 	}
 	
+	//TODO
+	//method to update a users bio
+	//method to update a users profile pic
+	
+	//We currently have neither of those in the model however so lets wait.
+	
+	
+	
+	
 	//---------COURSE----------//
 	
 	
