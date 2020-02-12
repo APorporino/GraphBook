@@ -9,5 +9,5 @@
 
 rootProject.name = 'GraphBook'
 
-include ':graphbook-backend'
+include ':GraphBook-Backend'
 
