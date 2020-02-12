@@ -2,6 +2,7 @@ package ca.mcgill.ecse428.graphbook.service;
 
 import java.sql.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +12,26 @@ import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Edge.Status;
 import ca.mcgill.ecse428.graphbook.model.Student;
 
+import ca.mcgill.ecse428.graphbook.dao.*;
+
 @Service
 public class GraphBookService {
+	
+	//Autowired repositories
+	
+	@Autowired
+	StudentRepository studentRepository;
+	
+	@Autowired
+	CourseRepository courseRepository;
+	
+	@Autowired
+	EdgeRepository edgeRepository;
+	
+	@Autowired
+	CourseOfferingRepository courseOfferingRepository;
+	
+	//--------STUDENT----------//
 	
 	/**
 	 * Create a new student
@@ -25,7 +44,7 @@ public class GraphBookService {
 	 * @return the new student
 	 */
 	@Transactional
-	public Student createStudent(String firstName, String lastName, String emailAddress, String password, Date createdDate) {
+	public Student createStudent(String firstName, String lastName, long studentId, String emailAddress, String password, Date createdDate) {
 		
 		Student student;
 		
@@ -37,6 +56,7 @@ public class GraphBookService {
 		student = new Student();
 		student.setFirstName(firstName);
 		student.setLastName(lastName);
+		student.setStudentId(studentId);
 		student.setEmailAddress(emailAddress);
 		student.setPassword(password);
 		student.setCreatedDate(createdDate);
@@ -48,6 +68,22 @@ public class GraphBookService {
 		
 		return student;
 	}
+	
+	/**
+	 * Will find a student by a students unique ID
+	 * 
+	 * @param studentId
+	 * @return Student object corresponding to student with that Id
+	 */
+	public Student getStudentById(long studentId) {
+		
+		Student student = studentRepository.findById(studentId);
+		
+		return student;
+	}
+	
+	
+	//---------COURSE----------//
 	
 	/**
 	 * Create a new Course.
@@ -80,6 +116,8 @@ public class GraphBookService {
 		
 	}
 	
+	//------COURSE_OFFERING----//
+	
 	/**
 	 * Create a new course offering.
 	 * @param semester
@@ -108,6 +146,8 @@ public class GraphBookService {
 		return courseOffering;
 		
 	}
+	
+	//----------EDGE-----------//
 	
 	/**
 	 * Create a new edge that represents the relationship between two students.

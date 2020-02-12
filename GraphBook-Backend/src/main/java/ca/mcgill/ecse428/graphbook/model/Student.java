@@ -15,7 +15,7 @@ public class Student {
 	
 	private long studentId;
 	
-	@Id @GeneratedValue
+	@Id
 	public long getStudentId() {
 		return this.studentId;
 	}

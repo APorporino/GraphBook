@@ -6,3 +6,5 @@ build/
 
 # Ignore bin/ from backend directory
 graphbook-backend/bin/
+
+**/.DS_Store
