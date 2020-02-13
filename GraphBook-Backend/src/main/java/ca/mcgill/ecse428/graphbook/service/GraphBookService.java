@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.graphbook.service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,9 @@ public class GraphBookService {
 		student.setEmailAddress(emailAddress);
 		student.setPassword(password);
 		student.setCreatedDate(createdDate);
+		student.setBio(null);
+		student.setConnections(null);
+		student.setCourseOfferings(null);
 		
 		studentRepository.save(student);
 		
@@ -184,6 +188,20 @@ public class GraphBookService {
 	@Transactional
 	public void deleteAllStudents() {
 		studentRepository.deleteAll();
+	}
+	
+	/**
+	 * Updates a students bio.
+	 * 
+	 * @param String bio to be updated to
+	 */
+	@Transactional
+	public Student updateStudentBio(long studentId, String bio) {
+		Student student = studentRepository.findByStudentId(studentId);
+		student.setBio(bio);
+		studentRepository.save(student);
+		return student;
+		
 	}
 	
 	//---------COURSE----------//
@@ -339,35 +357,32 @@ public class GraphBookService {
 	 * Create a new edge that represents the relationship between two students.
 	 * @param follower
 	 * @param followee
-	 * @param status
-	 * @param weight
 	 * @param createdDate
 	 * @return the new edge
 	 */
-//	@Transactional
-//	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
-//		
-//		Edge edge;
-//		
-//		/*
-//		 * TODO
-//		 * Error checking
-//		 */
-//		
-//		edge = new Edge();
-//		edge.setFollowerId(followerId);
-//		edge.setFolloweeId(followeeId);
-//		edge.setStatus(status);
-//		edge.setWeight(weight);
-//		edge.setCreatedDate(createdDate);
-//		
-//		/*
-//		 * TODO
-//		 * Save in the repository
-//		 */
-//		
-//		return edge;
-//		
-//	}
+	@Transactional
+	public Edge createEdge(Student follower, Student followee, Date createdDate) {
+		
+		Edge edge;
+		
+		/*
+		 * TODO
+		 * Error checking
+		 */
+		
+		edge = new Edge();
+		List<Student> connectedStudents = new ArrayList<>();
+		connectedStudents.add(follower);
+		connectedStudents.add(followee);
+		edge.setConnectedStudents(connectedStudents);
+		edge.setStatusRequester(Status.ACCEPTED);
+		edge.setStatusRequested(Status.PENDING);
+		edge.setCreatedDate(createdDate);
+		
+		edgeRepository.save(edge);
+		
+		return edge;
+		
+	}
 	
 }

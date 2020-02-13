@@ -17,7 +17,7 @@ public interface EdgeRepository extends CrudRepository<Edge, Long>{
 	
 	Edge findByEdgeId(long edgeId);
 	
-	List<Edge> findByWeight(int weight);
+	//List<Edge> findByWeight(int weight);
 	
 	//Edge findByFollowerIdAndFolloweeId(long followerId, long followeeId);
 	

@@ -48,6 +48,18 @@ public class GraphBookRestController {
 		return convertToDto(student);
 	}
 	
+	/**
+	 * This method will update a users bio.
+	 * @param bio String representing the bio
+	 * 
+	 * @return StudentDto object for updated student
+	 */
+	@PostMapping(value = { "/students/updateBio", "students/updateBio/" })
+	public StudentDto updateBio(@RequestParam("studentId") long studentId, @RequestParam("bio") String bio) throws IllegalArgumentException {
+		Student student = service.updateStudentBio(studentId, bio);
+		return convertToDto(student);
+	}
+	
 	
 	/**
 	 * Gets a student by his unique studentId.
@@ -61,6 +73,55 @@ public class GraphBookRestController {
 		
 	}
 	
+	//	@GetMapping(value = { "/students/getByUsername" })
+	//	public StudentDto getStudentByUsername(@RequestParam("username") String username) {
+	//		//TODO finish this method
+	//	}
+	
+	/**
+	 * Allows a student to update their username, provided the new username is not already taken
+	 * @param studentId
+	 * @param newUsername
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated username
+	 */
+	@PostMapping(value = { "/{studentId}/profile/username" })
+	public StudentDto updateStudentUsername(@PathVariable long studentId, @RequestParam("newUsername") String newUsername) {
+		//		if(getStudentByUsername(newUsername) != null) {
+		//			throw new Exception("Username is already taken.");
+		//		}
+		
+		Student student = service.getStudentByStudentId(studentId);
+		//student.setUsername(newUsername);
+		return convertToDto(student);
+		
+	}
+	
+	/**
+	 * Allows a student to update their user bio
+	 * @param studentId
+	 * @param newBio
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated bio
+	 */
+	@PostMapping(value = { "/{studentId}/profile/bio" })
+	public StudentDto updateStudentBio(@PathVariable long studentId, @RequestParam("newBio") String newBio) {
+		Student student = service.getStudentByStudentId(studentId);
+		//student.setBio(newBio);
+		return convertToDto(student);
+	}
+	
+	/**
+	 * Allows a student to update their avatar
+	 * @param studentId
+	 * @param newAvatar
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated avatar
+	 */
+	@PostMapping(value = { "/{studentId}/profile/avatar" })
+	public StudentDto updateStudentAvatar(@PathVariable long studentId, @RequestParam("newAvatar") String newAvatar) {
+		Student student = service.getStudentByStudentId(studentId);
+		//student.setAvatar(newAvatar);
+		return convertToDto(student);
+	}
+
 	/**
 	 * Gets all students.
 	 * @return
@@ -75,11 +136,8 @@ public class GraphBookRestController {
 		return students;
 		
 	}
-	//TODO
-	//method to update a users bio
-	//method to update a users profile pic
-	
-	//We currently have neither of those in the model however so lets wait.
+
+	//We currently dont have that in the model however so lets wait.
 	
 	
 	
@@ -110,6 +168,9 @@ public class GraphBookRestController {
 		studentDto.setCreatedDate(student.getCreatedDate());
 		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
+		studentDto.setBio(student.getBio());
+		studentDto.setConnections(student.getConnections());
+		studentDto.setCourseOfferings(student.getCourseOfferings());
 		
 		return studentDto;
 	}
