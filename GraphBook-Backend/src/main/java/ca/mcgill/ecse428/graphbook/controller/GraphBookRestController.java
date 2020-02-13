@@ -11,6 +11,7 @@ import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,19 +98,6 @@ public class GraphBookRestController {
 	}
 	
 	/**
-	 * Allows a student to update their user bio
-	 * @param studentId
-	 * @param newBio
-	 * @return StudentDto StudentDto object corresponding to the specified student with the updated bio
-	 */
-	@PostMapping(value = { "/{studentId}/profile/bio" })
-	public StudentDto updateStudentBio(@PathVariable long studentId, @RequestParam("newBio") String newBio) {
-		Student student = service.getStudentByStudentId(studentId);
-		//student.setBio(newBio);
-		return convertToDto(student);
-	}
-	
-	/**
 	 * Allows a student to update their avatar
 	 * @param studentId
 	 * @param newAvatar
@@ -117,8 +105,7 @@ public class GraphBookRestController {
 	 */
 	@PostMapping(value = { "/{studentId}/profile/avatar" })
 	public StudentDto updateStudentAvatar(@PathVariable long studentId, @RequestParam("newAvatar") String newAvatar) {
-		Student student = service.getStudentByStudentId(studentId);
-		//student.setAvatar(newAvatar);
+		Student student = service.updateStudentAvatar(studentId, newAvatar);
 		return convertToDto(student);
 	}
 
@@ -135,10 +122,7 @@ public class GraphBookRestController {
 		
 		return students;
 		
-	}
-
-	//We currently dont have that in the model however so lets wait.
-	
+	}	
 	
 	
 	
@@ -169,7 +153,7 @@ public class GraphBookRestController {
 		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setBio(student.getBio());
-		studentDto.setConnections(student.getConnections());
+		studentDto.setAvatar(student.getAvatar());
 		studentDto.setCourseOfferings(student.getCourseOfferings());
 		
 		return studentDto;

@@ -95,7 +95,6 @@ public class GraphBookService {
 		student.setPassword(password);
 		student.setCreatedDate(createdDate);
 		student.setBio(null);
-		student.setConnections(null);
 		student.setCourseOfferings(null);
 		
 		studentRepository.save(student);
@@ -202,6 +201,19 @@ public class GraphBookService {
 		studentRepository.save(student);
 		return student;
 		
+	}
+	
+	/**
+	 * Updates a students avatar.
+	 * 
+	 * @param String avatar to be updated to
+	 */
+	@Transactional
+	public Student updateStudentAvatar(long studentId, String avatar) {
+		Student student = studentRepository.findByStudentId(studentId);
+		student.setAvatar(avatar);
+		studentRepository.save(student);
+		return student;
 	}
 	
 	//---------COURSE----------//
@@ -357,11 +369,13 @@ public class GraphBookService {
 	 * Create a new edge that represents the relationship between two students.
 	 * @param follower
 	 * @param followee
+	 * @param status
+	 * @param weight
 	 * @param createdDate
 	 * @return the new edge
 	 */
 	@Transactional
-	public Edge createEdge(Student follower, Student followee, Date createdDate) {
+	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
 		
 		Edge edge;
 		
@@ -371,15 +385,16 @@ public class GraphBookService {
 		 */
 		
 		edge = new Edge();
-		List<Student> connectedStudents = new ArrayList<>();
-		connectedStudents.add(follower);
-		connectedStudents.add(followee);
-		edge.setConnectedStudents(connectedStudents);
-		edge.setStatusRequester(Status.ACCEPTED);
-		edge.setStatusRequested(Status.PENDING);
+		edge.setFollowerId(followerId);
+		edge.setFolloweeId(followeeId);
+		edge.setStatus(status);
+		edge.setWeight(weight);
 		edge.setCreatedDate(createdDate);
 		
-		edgeRepository.save(edge);
+		/*
+		 * TODO
+		 * Save in the repository
+		 */
 		
 		return edge;
 		
