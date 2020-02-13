@@ -1,10 +1,12 @@
 package ca.mcgill.ecse428.graphbook.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Edge {
@@ -20,48 +22,59 @@ public class Edge {
 		this.edgeId = edgeId;
 	} 
 	
-	private long followerId;
+	private List<Student> connectedStudents;
 	
-	public long getFollowerId() {
-		return this.followerId;
-	}
-
-	public void setFollowerId(long followerId) {
-		this.followerId = followerId;
+	@ManyToMany(mappedBy = "connections")
+	public List<Student> getConnectedStudents(){
+		return this.connectedStudents;
 	}
 	
-	private long followeeId;
-
-	public long getFolloweeId() {
-		return this.followeeId;
+	public void setConnectedStudents(List<Student> connectedStudents) {
+		this.connectedStudents = connectedStudents;
 	}
-
-	public void setFolloweeId(long followeeId) {
-		this.followeeId = followeeId;
-	}
+	
+//	private Student followerStudent;
+//	
+//	public Student getFollowerId() {
+//		return this.followerStudent;
+//	}
+//
+//	public void setFollowerStudent(Student followerStudent) {
+//		this.followerStudent = followerStudent;
+//	}
+//	
+//	private Student followeeStudent;
+//
+//	public Student getFolloweeId() {
+//		return this.followeeStudent;
+//	}
+//
+//	public void setFolloweeStudent(Student followeeStudent) {
+//		this.followeeStudent = followeeStudent;
+//	}
 	
 	public enum Status {
 		PENDING, ACCEPTED, DECLINED;
 	}
 	
-	private Status status;
+	private Status statusRequester;
 
-	public Status getStatus() {
-		return this.status;
+	public Status getStatusRequester() {
+		return this.statusRequester;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+	public void setStatusRequester(Status statusRequester) {
+		this.statusRequester = statusRequester;
 	}
 	
-	private int weight;
+	private Status statusRequested;
 
-	public int getWeight() {
-		return this.weight;
+	public Status getStatusRequested() {
+		return this.statusRequested;
 	}
 
-	public void setWeight(int weight) {
-		this.weight = weight;
+	public void setStatusRequested(Status statusRequested) {
+		this.statusRequested = statusRequested;
 	}
 	
 	private Date createdDate;

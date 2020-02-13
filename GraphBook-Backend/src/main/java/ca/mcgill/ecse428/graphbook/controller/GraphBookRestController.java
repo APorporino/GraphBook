@@ -3,11 +3,14 @@ package ca.mcgill.ecse428.graphbook.controller;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,13 +48,25 @@ public class GraphBookRestController {
 		return convertToDto(student);
 	}
 	
+	/**
+	 * This method will update a users bio.
+	 * @param bio String representing the bio
+	 * 
+	 * @return StudentDto object for updated student
+	 */
+	@PostMapping(value = { "/students/updateBio", "students/updateBio/" })
+	public StudentDto updateBio(@RequestParam("studentId") long studentId, @RequestParam("bio") String bio) throws IllegalArgumentException {
+		Student student = service.updateStudentBio(studentId, bio);
+		return convertToDto(student);
+	}
+	
 	
 	/**
 	 * Gets a student by his unique studentId.
 	 * @param studentId
 	 * @return StudentDto StudentDto object corresponding to the student with that studentId
 	 */
-	@PostMapping(value = { "/students/getByStudentId", "/students/getByStudentId/" })
+	@GetMapping(value = { "/students/getByStudentId", "/students/getByStudentId/" })
 	public StudentDto getStudentById(@RequestParam("studentId") long studentId) throws IllegalArgumentException {
 		Student student = service.getStudentByStudentId(studentId);
 		return convertToDto(student);
@@ -106,8 +121,23 @@ public class GraphBookRestController {
 		//student.setAvatar(newAvatar);
 		return convertToDto(student);
 	}
-	
-	//We currently have neither of those in the model however so lets wait.
+
+	/**
+	 * Gets all students.
+	 * @return
+	 */
+	@GetMapping(value = { "/students", "/students/" })
+	public List<StudentDto> getAllStudents(){
+		List<StudentDto> students = new ArrayList<>();
+		for (Student student : service.getAllStudents()) {
+			students.add(convertToDto(student));
+		}
+		
+		return students;
+		
+	}
+
+	//We currently dont have that in the model however so lets wait.
 	
 	
 	
@@ -136,7 +166,11 @@ public class GraphBookRestController {
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setEmailAddress(student.getEmailAddress());
 		studentDto.setCreatedDate(student.getCreatedDate());
+		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
+		studentDto.setBio(student.getBio());
+		studentDto.setConnections(student.getConnections());
+		studentDto.setCourseOfferings(student.getCourseOfferings());
 		
 		return studentDto;
 	}

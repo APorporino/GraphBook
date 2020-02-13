@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.graphbook.service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,25 +55,28 @@ public class GraphBookService {
 		if(firstName == null) {
 			error += "First name must be specified! ";
 		}
-		else if (firstName.equals("")) {
+		else if (firstName.trim().equals("")) {
 			error += "First name must be specified! ";
 		}
 		if(lastName == null) {
 			error += "Last name must be specified! ";
 		}
-		else if (lastName.equals("")) {
+		else if (lastName.trim().equals("")) {
 			error += "Last name must be specified! ";
 		}
 		if(emailAddress == null) {
 			error += "Email address must be specified! ";
 		}
-		else if (emailAddress.equals("")) {
+		else if (emailAddress.trim().equals("")) {
 			error += "Email address must be specified! ";
+		}
+		else if (getStudentByEmailAddress(emailAddress) != null) {
+			error += "Student with that email address already exists! ";
 		}
 		if(password == null) {
 			error += "Password must be specified! ";
 		}
-		else if (password.equals("")) {
+		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
 		if (getStudentByStudentId(studentId) != null) {
@@ -90,6 +94,9 @@ public class GraphBookService {
 		student.setEmailAddress(emailAddress);
 		student.setPassword(password);
 		student.setCreatedDate(createdDate);
+		student.setBio(null);
+		student.setConnections(null);
+		student.setCourseOfferings(null);
 		
 		studentRepository.save(student);
 		
@@ -159,7 +166,7 @@ public class GraphBookService {
 	 * @return Student object
 	 */
 	@Transactional
-	public Student getStudentByEmail(String emailAddress) {
+	public Student getStudentByEmailAddress(String emailAddress) {
 		Student student = studentRepository.findByEmailAddress(emailAddress);
 		return student;
 	}
@@ -175,7 +182,27 @@ public class GraphBookService {
 		studentRepository.delete(student);
 		return student;
 	}
+	/**
+	 * Delete all students from the database
+	 */
+	@Transactional
+	public void deleteAllStudents() {
+		studentRepository.deleteAll();
+	}
 	
+	/**
+	 * Updates a students bio.
+	 * 
+	 * @param String bio to be updated to
+	 */
+	@Transactional
+	public Student updateStudentBio(long studentId, String bio) {
+		Student student = studentRepository.findByStudentId(studentId);
+		student.setBio(bio);
+		studentRepository.save(student);
+		return student;
+		
+	}
 	
 	//---------COURSE----------//
 	
@@ -330,13 +357,11 @@ public class GraphBookService {
 	 * Create a new edge that represents the relationship between two students.
 	 * @param follower
 	 * @param followee
-	 * @param status
-	 * @param weight
 	 * @param createdDate
 	 * @return the new edge
 	 */
 	@Transactional
-	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
+	public Edge createEdge(Student follower, Student followee, Date createdDate) {
 		
 		Edge edge;
 		
@@ -346,16 +371,15 @@ public class GraphBookService {
 		 */
 		
 		edge = new Edge();
-		edge.setFollowerId(followerId);
-		edge.setFolloweeId(followeeId);
-		edge.setStatus(status);
-		edge.setWeight(weight);
+		List<Student> connectedStudents = new ArrayList<>();
+		connectedStudents.add(follower);
+		connectedStudents.add(followee);
+		edge.setConnectedStudents(connectedStudents);
+		edge.setStatusRequester(Status.ACCEPTED);
+		edge.setStatusRequested(Status.PENDING);
 		edge.setCreatedDate(createdDate);
 		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
+		edgeRepository.save(edge);
 		
 		return edge;
 		
