@@ -54,25 +54,28 @@ public class GraphBookService {
 		if(firstName == null) {
 			error += "First name must be specified! ";
 		}
-		else if (firstName.equals("")) {
+		else if (firstName.trim().equals("")) {
 			error += "First name must be specified! ";
 		}
 		if(lastName == null) {
 			error += "Last name must be specified! ";
 		}
-		else if (lastName.equals("")) {
+		else if (lastName.trim().equals("")) {
 			error += "Last name must be specified! ";
 		}
 		if(emailAddress == null) {
 			error += "Email address must be specified! ";
 		}
-		else if (emailAddress.equals("")) {
+		else if (emailAddress.trim().equals("")) {
 			error += "Email address must be specified! ";
+		}
+		else if (getStudentByEmailAddress(emailAddress) != null) {
+			error += "Student with that email address already exists! ";
 		}
 		if(password == null) {
 			error += "Password must be specified! ";
 		}
-		else if (password.equals("")) {
+		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
 		if (getStudentByStudentId(studentId) != null) {
@@ -159,7 +162,7 @@ public class GraphBookService {
 	 * @return Student object
 	 */
 	@Transactional
-	public Student getStudentByEmail(String emailAddress) {
+	public Student getStudentByEmailAddress(String emailAddress) {
 		Student student = studentRepository.findByEmailAddress(emailAddress);
 		return student;
 	}
@@ -175,7 +178,13 @@ public class GraphBookService {
 		studentRepository.delete(student);
 		return student;
 	}
-	
+	/**
+	 * Delete all students from the database
+	 */
+	@Transactional
+	public void deleteAllStudents() {
+		studentRepository.deleteAll();
+	}
 	
 	//---------COURSE----------//
 	
