@@ -344,30 +344,30 @@ public class GraphBookService {
 	 * @param createdDate
 	 * @return the new edge
 	 */
-	@Transactional
-	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
-		
-		Edge edge;
-		
-		/*
-		 * TODO
-		 * Error checking
-		 */
-		
-		edge = new Edge();
-		edge.setFollowerId(followerId);
-		edge.setFolloweeId(followeeId);
-		edge.setStatus(status);
-		edge.setWeight(weight);
-		edge.setCreatedDate(createdDate);
-		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
-		
-		return edge;
-		
-	}
+//	@Transactional
+//	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
+//		
+//		Edge edge;
+//		
+//		/*
+//		 * TODO
+//		 * Error checking
+//		 */
+//		
+//		edge = new Edge();
+//		edge.setFollowerId(followerId);
+//		edge.setFolloweeId(followeeId);
+//		edge.setStatus(status);
+//		edge.setWeight(weight);
+//		edge.setCreatedDate(createdDate);
+//		
+//		/*
+//		 * TODO
+//		 * Save in the repository
+//		 */
+//		
+//		return edge;
+//		
+//	}
 	
 }
