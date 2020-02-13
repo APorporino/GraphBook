@@ -15,7 +15,7 @@ public class GraphBookApplication {
 	
 	@RequestMapping("/")
 	public String greeting(){
-		return "Hello world!";
+		return "Hello world from graphbook backend!";
 	}
 	
 }
