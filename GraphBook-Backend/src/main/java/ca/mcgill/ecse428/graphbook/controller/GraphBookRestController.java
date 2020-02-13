@@ -3,11 +3,14 @@ package ca.mcgill.ecse428.graphbook.controller;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,13 +54,27 @@ public class GraphBookRestController {
 	 * @param studentId
 	 * @return StudentDto StudentDto object corresponding to the student with that studentId
 	 */
-	@PostMapping(value = { "/students/getByStudentId", "/students/getByStudentId/" })
+	@GetMapping(value = { "/students/getByStudentId", "/students/getByStudentId/" })
 	public StudentDto getStudentById(@RequestParam("studentId") long studentId) throws IllegalArgumentException {
 		Student student = service.getStudentByStudentId(studentId);
 		return convertToDto(student);
 		
 	}
 	
+	/**
+	 * Gets all students.
+	 * @return
+	 */
+	@GetMapping(value = { "/students", "/students/" })
+	public List<StudentDto> getAllStudents(){
+		List<StudentDto> students = new ArrayList<>();
+		for (Student student : service.getAllStudents()) {
+			students.add(convertToDto(student));
+		}
+		
+		return students;
+		
+	}
 	//TODO
 	//method to update a users bio
 	//method to update a users profile pic
@@ -91,6 +108,7 @@ public class GraphBookRestController {
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setEmailAddress(student.getEmailAddress());
 		studentDto.setCreatedDate(student.getCreatedDate());
+		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
 		
 		return studentDto;
