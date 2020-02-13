@@ -48,6 +48,18 @@ public class GraphBookRestController {
 		return convertToDto(student);
 	}
 	
+	/**
+	 * This method will update a users bio.
+	 * @param bio String representing the bio
+	 * 
+	 * @return StudentDto object for updated student
+	 */
+	@PostMapping(value = { "/students/updateBio", "students/updateBio/" })
+	public StudentDto updateBio(@RequestParam("studentId") long studentId, @RequestParam("bio") String bio) throws IllegalArgumentException {
+		Student student = service.updateStudentBio(studentId, bio);
+		return convertToDto(student);
+	}
+	
 	
 	/**
 	 * Gets a student by his unique studentId.
@@ -75,11 +87,14 @@ public class GraphBookRestController {
 		return students;
 		
 	}
+	
+	
+	
+	
 	//TODO
-	//method to update a users bio
 	//method to update a users profile pic
 	
-	//We currently have neither of those in the model however so lets wait.
+	//We currently dont have that in the model however so lets wait.
 	
 	
 	
@@ -110,6 +125,9 @@ public class GraphBookRestController {
 		studentDto.setCreatedDate(student.getCreatedDate());
 		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
+		studentDto.setBio(student.getBio());
+		studentDto.setConnections(student.getConnections());
+		studentDto.setCourseOfferings(student.getCourseOfferings());
 		
 		return studentDto;
 	}

@@ -77,16 +77,6 @@ public class Edge {
 		this.statusRequested = statusRequested;
 	}
 	
-	private int weight;
-
-	public int getWeight() {
-		return this.weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-	
 	private Date createdDate;
 
 	public Date getCreatedDate() {

@@ -1,9 +1,11 @@
 package ca.mcgill.ecse428.graphbook.dto;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 
 import ca.mcgill.ecse428.graphbook.model.CourseOffering;
+import ca.mcgill.ecse428.graphbook.model.Edge;
 
 public class StudentDto {
 
@@ -14,13 +16,15 @@ public class StudentDto {
 	private String password;
 	private Set<CourseOffering> courseOfferings;
 	private Date createdDate;
+	private String bio;
+	private List<Edge> connections;
 	
 	public StudentDto() {
 		
 	}
 	
 	public StudentDto(long studentId, String firstName, String lastName, String emailAddress, 
-			String password, Set<CourseOffering> courseOfferings, Date createdDate) {
+			String password, Set<CourseOffering> courseOfferings, Date createdDate, String bio, List<Edge> connections) {
 		this.studentId = studentId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -28,6 +32,8 @@ public class StudentDto {
 		this.password = password;
 		this.courseOfferings = courseOfferings;
 		this.createdDate = createdDate;
+		this.bio = bio;
+		this.connections = connections;
 	}
 	
 	public long getStudentId() {
@@ -90,6 +96,22 @@ public class StudentDto {
 	
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	public String getBio() {
+		return this.bio;
+	}
+	
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+	
+	public List<Edge> getConnections(){
+		return this.connections;
+	}
+	
+	public void setConnections(List<Edge> connections) {
+		this.connections = connections;
 	}
 	
 	
