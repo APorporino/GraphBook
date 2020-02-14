@@ -206,6 +206,34 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Update a student's account email address
+	 * @param studentId
+	 * @param emailAddress
+	 * @return
+	 */
+	@Transactional
+	public Student updateStudentEmailAddress(long studentId, String emailAddress) {
+		Student student = studentRepository.findByStudentId(studentId);
+		student.setEmailAddress(emailAddress);
+		studentRepository.save(student);
+		return student;
+	}
+	
+	/**
+	 * Update a student's account password
+	 * @param studentId
+	 * @param password
+	 * @return
+	 */
+	@Transactional
+	public Student updateStudentPassword(long studentId, String password) {
+		Student student = studentRepository.findByStudentId(studentId);
+		student.setPassword(password);
+		studentRepository.save(student);
+		return student;
+	}
+	
+	/**
 	 * Updates a students bio.
 	 * 
 	 * @param String bio to be updated to
@@ -245,7 +273,7 @@ public class GraphBookService {
 	 * 
 	 */
 	@Transactional
-	public void updateStudentWithCourseOffering(long studentId, long courseOfferingId) {
+	public void updateStudentWithANewCourseOffering(long studentId, long courseOfferingId) {
 				
 		Student student = studentRepository.findByStudentId(studentId);
 		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
@@ -510,6 +538,14 @@ public class GraphBookService {
 		}
 		return resultList;
 
+	}
+	
+	public boolean validateEmailAddressFormat(String emailAddress) {
+		String pattern = "[\\w\\d\\._]+@[\\w]*\\.[\\w]{2,3}";
+		
+		boolean isValid = emailAddress.matches(pattern);
+		
+		return isValid;
 	}
 	
 	

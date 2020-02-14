@@ -1,13 +1,14 @@
 package ca.mcgill.ecse428.graphbook;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Date;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -141,7 +142,7 @@ public class TestServiceStudent {
 		assertEquals(0, students.size());
 
 	}
-	
+
 	@Test
 	public void createStudentEmptyLastName() {
 		assertEquals(0, service.getAllStudents().size());
@@ -166,7 +167,7 @@ public class TestServiceStudent {
 		assertEquals(0, students.size());
 
 	}
-	
+
 	@Test
 	public void createStudentNullEmailAddress() {
 		assertEquals(0, service.getAllStudents().size());
@@ -191,7 +192,7 @@ public class TestServiceStudent {
 		assertEquals(0, students.size());
 
 	}
-	
+
 	@Test
 	public void createStudentEmptyEmailAddress() {
 		assertEquals(0, service.getAllStudents().size());
@@ -241,7 +242,7 @@ public class TestServiceStudent {
 		assertEquals(0, students.size());
 
 	}
-	
+
 	@Test
 	public void createStudentEmptyPassword() {
 		assertEquals(0, service.getAllStudents().size());
@@ -266,10 +267,10 @@ public class TestServiceStudent {
 		assertEquals(0, students.size());
 
 	}
-	
+
 	@Test
 	public void createStudentWithDuplicateStudentId() {
-		
+
 		// create the first student
 		assertEquals(0, service.getAllStudents().size());
 
@@ -294,7 +295,7 @@ public class TestServiceStudent {
 		assertEquals(emailAddress, students.get(0).getEmailAddress());
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
-		
+
 		// now the second student
 		String firstName2 = "Jimmy2";
 		String lastName2 = "Flimmy2";
@@ -309,9 +310,9 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Student with that studentId already exists!");
-		
+
 		students = service.getAllStudents();
 		assertEquals(1, students.size());
 		assertEquals(firstName, students.get(0).getFirstName());
@@ -320,12 +321,12 @@ public class TestServiceStudent {
 		assertEquals(emailAddress, students.get(0).getEmailAddress());
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
-		
+
 	}
-	
+
 	@Test
 	public void createStudentWithDuplicateEmailAddress() {
-		
+
 		// create the first student
 		assertEquals(0, service.getAllStudents().size());
 
@@ -350,7 +351,7 @@ public class TestServiceStudent {
 		assertEquals(emailAddress, students.get(0).getEmailAddress());
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
-		
+
 		// now the second student
 		String firstName2 = "Jimmy2";
 		String lastName2 = "Flimmy2";
@@ -365,9 +366,9 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Student with that email address already exists!");
-		
+
 		students = service.getAllStudents();
 		assertEquals(1, students.size());
 		assertEquals(firstName, students.get(0).getFirstName());
@@ -376,90 +377,261 @@ public class TestServiceStudent {
 		assertEquals(emailAddress, students.get(0).getEmailAddress());
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
-		
+
 	}
-	
+
 	@Test
 	public void updateEmptyCourseOfferingListWithValidCourseOffering() {
-		
+
 		// create the first student
-				assertEquals(0, service.getAllStudents().size());
+		assertEquals(0, service.getAllStudents().size());
 
-				String firstName = "Jimmy";
-				String lastName = "Flimmy";
-				long studentId = 255654211;
-				String emailAddress = "jimmy.flimmy@mail.com";
-				String password = "jimmy";
-				Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
 
-				try {
-					service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
-				} catch(IllegalArgumentException e) {
-					fail();
-				}
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
 
-				List<Student> students = service.getAllStudents();
-				
-				assertEquals(1, students.size());
-				assertEquals(firstName, students.get(0).getFirstName());
-				assertEquals(lastName, students.get(0).getLastName());
-				assertEquals(studentId, students.get(0).getStudentId());
-				assertEquals(emailAddress, students.get(0).getEmailAddress());
-				assertEquals(password, students.get(0).getPassword());
-				assertEquals(createdDate, students.get(0).getCreatedDate());
-				
-				String courseId = "MATH240";
-				String name = "Discrete Structures";
-				
-				try {
-					service.createCourse(courseId, name, createdDate);
-				} catch(IllegalArgumentException e) {
-					fail();
-				}
-				
-				String semester = "WINTER2020";
-						
-				try {
-					service.createCourseOffering(semester, createdDate, courseId);
-				} catch(IllegalArgumentException e) {
-					fail();
-				}
-				
-				List<CourseOffering> courseOfferings = service.getAllCourseOfferings();
-				
-				assertEquals(1, courseOfferings.size());
-				assertEquals(semester, courseOfferings.get(0).getSemester());
-				assertEquals(createdDate, courseOfferings.get(0).getCreatedDate());
-				
-				
-				
-				try {
-					service.updateStudentWithCourseOffering(studentId, courseOfferings.get(0).getCourseOfferingId());
-				} catch(IllegalArgumentException e) {
-					fail();
-				}
-				
-				List<Student> studentsFromCourse = service.getStudentsByCourseOfferingId(courseOfferings.get(0).getCourseOfferingId());
-				
-				assertEquals(1, studentsFromCourse.size());
-				assertEquals(firstName, studentsFromCourse.get(0).getFirstName());
-				assertEquals(lastName, studentsFromCourse.get(0).getLastName());
-				assertEquals(studentId, studentsFromCourse.get(0).getStudentId());
-				assertEquals(emailAddress, studentsFromCourse.get(0).getEmailAddress());
-				assertEquals(password, studentsFromCourse.get(0).getPassword());
-				assertEquals(createdDate, studentsFromCourse.get(0).getCreatedDate());
-				
-				
-				
-				
+		List<Student> students = service.getAllStudents();
+
+		assertEquals(1, students.size());
+		assertEquals(firstName, students.get(0).getFirstName());
+		assertEquals(lastName, students.get(0).getLastName());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(emailAddress, students.get(0).getEmailAddress());
+		assertEquals(password, students.get(0).getPassword());
+		assertEquals(createdDate, students.get(0).getCreatedDate());
+
+		String courseId = "MATH240";
+		String name = "Discrete Structures";
+
+		try {
+			service.createCourse(courseId, name, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		String semester = "WINTER2020";
+
+		try {
+			service.createCourseOffering(semester, createdDate, courseId);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<CourseOffering> courseOfferings = service.getAllCourseOfferings();
+
+		assertEquals(1, courseOfferings.size());
+		assertEquals(semester, courseOfferings.get(0).getSemester());
+		assertEquals(createdDate, courseOfferings.get(0).getCreatedDate());
+
+
+
+		try {
+			service.updateStudentWithANewCourseOffering(studentId, courseOfferings.get(0).getCourseOfferingId());
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<Student> studentsFromCourse = service.getStudentsByCourseOfferingId(courseOfferings.get(0).getCourseOfferingId());
+
+		assertEquals(1, studentsFromCourse.size());
+		assertEquals(firstName, studentsFromCourse.get(0).getFirstName());
+		assertEquals(lastName, studentsFromCourse.get(0).getLastName());
+		assertEquals(studentId, studentsFromCourse.get(0).getStudentId());
+		assertEquals(emailAddress, studentsFromCourse.get(0).getEmailAddress());
+		assertEquals(password, studentsFromCourse.get(0).getPassword());
+		assertEquals(createdDate, studentsFromCourse.get(0).getCreatedDate());
+
+
 	}
 
+	@Test
+	public void updateStudentEmptyBio() {
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
 
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
 
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
 
+		List<Student> students = service.getAllStudents();
 
+		assertEquals(1, students.size());
+		assertEquals(firstName, students.get(0).getFirstName());
+		assertEquals(lastName, students.get(0).getLastName());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(emailAddress, students.get(0).getEmailAddress());
+		assertEquals(password, students.get(0).getPassword());
+		assertEquals(createdDate, students.get(0).getCreatedDate());
 
+		String bio = "I love cryptocurrency.";
 
+		try {
+			service.updateStudentBio(studentId, bio);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		students = service.getAllStudents();
+
+		assertEquals(bio, students.get(0).getBio());
+	}
+
+	@Test
+	public void updateStudentExistingBio() {
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<Student> students = service.getAllStudents();
+
+		assertEquals(1, students.size());
+		assertEquals(firstName, students.get(0).getFirstName());
+		assertEquals(lastName, students.get(0).getLastName());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(emailAddress, students.get(0).getEmailAddress());
+		assertEquals(password, students.get(0).getPassword());
+		assertEquals(createdDate, students.get(0).getCreatedDate());
+
+		String bio = "I love cryptocurrency.";
+
+		try {
+			service.updateStudentBio(studentId, bio);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		students = service.getAllStudents();
+
+		assertEquals(bio, students.get(0).getBio());
+
+		String newBio = "I hate cryptocurrency.";
+
+		try {
+			service.updateStudentBio(studentId, newBio);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		students = service.getAllStudents();
+
+		assertEquals(newBio, students.get(0).getBio());
+
+	}
+
+	@Test
+	public void updateEmailAddressWithValidEmailAddress() {
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<Student> students = service.getAllStudents();
+
+		assertEquals(1, students.size());
+		assertEquals(firstName, students.get(0).getFirstName());
+		assertEquals(lastName, students.get(0).getLastName());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(emailAddress, students.get(0).getEmailAddress());
+		assertEquals(password, students.get(0).getPassword());
+		assertEquals(createdDate, students.get(0).getCreatedDate());
+		
+		
+		String newEmailAddress = "jim.flim@mail.ca";
+		
+		try {
+			service.updateStudentEmailAddress(studentId, newEmailAddress);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		students = service.getAllStudents();
+		
+		assertEquals(1, students.size());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(newEmailAddress, students.get(0).getEmailAddress());
+		
+	}
+
+	@Test
+	public void testValidEmailAddressFormat() {
+		
+		String validEmailAddress1 = "jim.flim@gmail.com";
+		String validEmailAddress2 = "felix.sim@gmail.ca";
+		String validEmailAddress3 = "tony_porp@email.org";
+		String validEmailAddress4 = "a._b...__c@yahoo.net";
+		
+		String[] validEmailAddresses = {
+				validEmailAddress1,
+				validEmailAddress2,
+				validEmailAddress3,
+				validEmailAddress3
+		};
+		
+		String invalidEmailAddress1 = "jimmyflimmy";
+		String invalidEmailAddress2 = "jimflim@gmail";
+		String invalidEmailAddress3 = "jim.flim.jim@gmail.c";
+		String invalidEmailAddress4 = "tony.porp$$$$";
+		String invalidEmailAddress5 = "jimmyflimmy@email.como";
+		
+		String[] invalidEmailAddresses = {
+				invalidEmailAddress1,
+				invalidEmailAddress2,
+				invalidEmailAddress3,
+				invalidEmailAddress4,
+				invalidEmailAddress5
+		};
+		
+		for(int i = 0; i < validEmailAddresses.length; i++) {
+			assertTrue(service.validateEmailAddressFormat(validEmailAddresses[i]));
+		}
+		
+		for(int i = 0; i < invalidEmailAddresses.length; i++) {
+			assertFalse(service.validateEmailAddressFormat(invalidEmailAddresses[i]));
+		}
+	}
+
+	
 
 
 
