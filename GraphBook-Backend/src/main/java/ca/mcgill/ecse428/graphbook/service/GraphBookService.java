@@ -2,19 +2,23 @@ package ca.mcgill.ecse428.graphbook.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.mcgill.ecse428.graphbook.dao.CourseOfferingRepository;
+import ca.mcgill.ecse428.graphbook.dao.CourseRepository;
+import ca.mcgill.ecse428.graphbook.dao.EdgeRepository;
+import ca.mcgill.ecse428.graphbook.dao.StudentRepository;
 import ca.mcgill.ecse428.graphbook.model.Course;
 import ca.mcgill.ecse428.graphbook.model.CourseOffering;
 import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Edge.Status;
 import ca.mcgill.ecse428.graphbook.model.Student;
-
-import ca.mcgill.ecse428.graphbook.dao.*;
 
 @Service
 public class GraphBookService {
@@ -137,6 +141,18 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Get all the students that take a course offering
+	 * @param courseOfferingId
+	 * @return the set of students
+	 */
+	@Transactional
+	public List<Student> getStudentsByCourseOfferingId(long courseOfferingId){
+		CourseOffering courseOffering = this.getCourseOfferingByCourseOfferingId(courseOfferingId);
+		List<Student> students = toList(courseOffering.getStudents());
+		return students;
+	}
+	
+	/**
 	 * Finds list of students by their last name
 	 * @param lastName
 	 * @return List of student objects
@@ -216,6 +232,64 @@ public class GraphBookService {
 		return student;
 	}
 	
+	/**
+	 * Updates a student's course offering list. If the student has no course offering taken yet, it will 
+	 * create a new list with this offering. Otherwise, it will append it to the list if the course offering was not 
+	 * already in the list.
+	 * 
+	 * This method also adds the student specified to the list of students inside the course offering by the
+	 * same logic as presented above for the appending of a course offering.
+	 * 
+	 * @param studentId
+	 * @param courseOfferingId
+	 * 
+	 */
+	@Transactional
+	public void updateStudentWithCourseOffering(long studentId, long courseOfferingId) {
+				
+		Student student = studentRepository.findByStudentId(studentId);
+		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
+		
+		Set<CourseOffering> currentCourseOfferings = student.getCourseOfferings();
+		
+		/*
+		 *  We will check if the course offering list for this student is null.
+		 *  If so, simply create a new list with the requested course offering.
+		 *  If not, check if the course offering is already in the list, and add it if it is not.
+		 */
+		if(currentCourseOfferings == null) {
+			// add the course offering to the list inside student
+			currentCourseOfferings = new HashSet<CourseOffering>();
+			currentCourseOfferings.add(courseOffering);
+						
+		}else {
+			
+			if(currentCourseOfferings.contains(courseOffering)) {
+				throw new IllegalArgumentException("This student is already taking this course offering!");			
+			} else {
+				currentCourseOfferings.add(courseOffering);
+				
+			}
+		}
+		
+		Set<Student> currentStudents = courseOffering.getStudents();
+		
+		if(currentStudents == null) {
+			currentStudents = new HashSet<Student>();
+			currentStudents.add(student);
+		}else {
+			if(currentStudents.contains(student)) {
+				throw new IllegalArgumentException("This student is already taking this course offering!");			
+			} else {
+				currentStudents.add(student);
+			}
+		}
+		
+		studentRepository.save(student);
+		courseOfferingRepository.save(courseOffering);
+
+	}
+	
 	//---------COURSE----------//
 	
 	/**
@@ -290,6 +364,14 @@ public class GraphBookService {
 		return course;
 	}
 	
+	/**
+	 * Delete all the courses in the database.
+	 */
+	@Transactional
+	public void deleteAllCourses() {
+		courseRepository.deleteAll();
+	}
+	
 	
 	
 	//------COURSE_OFFERING----//
@@ -298,12 +380,15 @@ public class GraphBookService {
 	 * Create a new course offering.
 	 * @param semester
 	 * @param createdDate
+	 * @param courseId
 	 * @return the new course offering
 	 */
 	@Transactional
-	public CourseOffering createCourseOffering(String semester, Date createdDate) {
+	public CourseOffering createCourseOffering(String semester, Date createdDate, String courseId) {
 		
 		CourseOffering courseOffering;
+		
+		Course course = this.getCourseByCourseId(courseId);
 		
 		/*
 		 * TODO
@@ -313,11 +398,9 @@ public class GraphBookService {
 		courseOffering = new CourseOffering();
 		courseOffering.setSemester(semester);
 		courseOffering.setCreatedDate(createdDate);
+		courseOffering.setCourse(course);
 		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
+		courseOfferingRepository.save(courseOffering);
 		
 		return courseOffering;
 		
@@ -350,6 +433,16 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Finds all the course offerings in the database.
+	 * @return All the course offerings in the database.
+	 */
+	@Transactional
+	public List<CourseOffering> getAllCourseOfferings(){
+		List<CourseOffering> courseOfferings = courseOfferingRepository.findAll();
+		return courseOfferings;
+	}
+	
+	/**
 	 * Delete course offering by courseOfferingId
 	 * @param courseOfferingId
 	 * @return deleted Course
@@ -359,6 +452,14 @@ public class GraphBookService {
 		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
 		courseOfferingRepository.delete(courseOffering);
 		return courseOffering;
+	}
+	
+	/**
+	 * Delete all the course offerings.
+	 */
+	@Transactional 
+	public void deleteAllCourseOfferings(){
+		courseOfferingRepository.deleteAll();
 	}
 	
 	
@@ -399,5 +500,18 @@ public class GraphBookService {
 		return edge;
 		
 	}
+	
+	//--------------UTIL---------------//
+	
+	private <T> List<T> toList(Iterable<T> iterable){
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
+
+	}
+	
+	
 	
 }

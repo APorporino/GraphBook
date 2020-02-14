@@ -7,14 +7,14 @@ import java.sql.Date;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ca.mcgill.ecse428.graphbook.model.CourseOffering;
 import ca.mcgill.ecse428.graphbook.model.Student;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 
@@ -32,6 +32,8 @@ public class TestServiceStudent {
 
 	@BeforeEach
 	public void deleteStudents2() {
+		service.deleteAllCourseOfferings();
+		service.deleteAllCourses();
 		service.deleteAllStudents();	
 
 	}
@@ -375,6 +377,81 @@ public class TestServiceStudent {
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
 		
+	}
+	
+	@Test
+	public void updateEmptyCourseOfferingListWithValidCourseOffering() {
+		
+		// create the first student
+				assertEquals(0, service.getAllStudents().size());
+
+				String firstName = "Jimmy";
+				String lastName = "Flimmy";
+				long studentId = 255654211;
+				String emailAddress = "jimmy.flimmy@mail.com";
+				String password = "jimmy";
+				Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+				try {
+					service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+				} catch(IllegalArgumentException e) {
+					fail();
+				}
+
+				List<Student> students = service.getAllStudents();
+				
+				assertEquals(1, students.size());
+				assertEquals(firstName, students.get(0).getFirstName());
+				assertEquals(lastName, students.get(0).getLastName());
+				assertEquals(studentId, students.get(0).getStudentId());
+				assertEquals(emailAddress, students.get(0).getEmailAddress());
+				assertEquals(password, students.get(0).getPassword());
+				assertEquals(createdDate, students.get(0).getCreatedDate());
+				
+				String courseId = "MATH240";
+				String name = "Discrete Structures";
+				
+				try {
+					service.createCourse(courseId, name, createdDate);
+				} catch(IllegalArgumentException e) {
+					fail();
+				}
+				
+				String semester = "WINTER2020";
+						
+				try {
+					service.createCourseOffering(semester, createdDate, courseId);
+				} catch(IllegalArgumentException e) {
+					fail();
+				}
+				
+				List<CourseOffering> courseOfferings = service.getAllCourseOfferings();
+				
+				assertEquals(1, courseOfferings.size());
+				assertEquals(semester, courseOfferings.get(0).getSemester());
+				assertEquals(createdDate, courseOfferings.get(0).getCreatedDate());
+				
+				
+				
+				try {
+					service.updateStudentWithCourseOffering(studentId, courseOfferings.get(0).getCourseOfferingId());
+				} catch(IllegalArgumentException e) {
+					fail();
+				}
+				
+				List<Student> studentsFromCourse = service.getStudentsByCourseOfferingId(courseOfferings.get(0).getCourseOfferingId());
+				
+				assertEquals(1, studentsFromCourse.size());
+				assertEquals(firstName, studentsFromCourse.get(0).getFirstName());
+				assertEquals(lastName, studentsFromCourse.get(0).getLastName());
+				assertEquals(studentId, studentsFromCourse.get(0).getStudentId());
+				assertEquals(emailAddress, studentsFromCourse.get(0).getEmailAddress());
+				assertEquals(password, studentsFromCourse.get(0).getPassword());
+				assertEquals(createdDate, studentsFromCourse.get(0).getCreatedDate());
+				
+				
+				
+				
 	}
 
 
