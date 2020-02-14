@@ -37,6 +37,27 @@ public class GraphBookService {
 	@Autowired
 	CourseOfferingRepository courseOfferingRepository;
 	
+	
+	
+	//-------GENERAL METHODS---//
+	
+	
+	/**
+	 * Login student by emailAddress
+	 * @param authenticationToken
+	 * @param password
+	 * @return Student object
+	 */
+	public Student login(String emailAddress, String password) {
+		Student st = studentRepository.findByEmailAddress(emailAddress);
+		if(st != null) {
+			if (st.getPassword().equals(password)) {
+				return st;
+			}
+		}
+		return null;
+	}
+	
 	//--------STUDENT----------//
 	
 	/**
