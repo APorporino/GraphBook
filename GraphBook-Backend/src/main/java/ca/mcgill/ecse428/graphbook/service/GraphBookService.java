@@ -501,6 +501,33 @@ public class GraphBookService {
 		
 	}
 	
+	/**
+	 * Finds all edges for a given followee and status
+	 * @param status
+	 * @param followeeId
+	 * @return list of edges
+	 */
+	public List<Edge> getEdgeByStatusAndFolloweeId(String status, long followeeId) {
+		List<Edge> edges = edgeRepository.findByStatusAndFolloweeId(status, followeeId);
+		return edges;
+	}
+	
+	/**
+	 * Finds edge by followerId and followeeId
+	 * @param followerId
+	 * @param followeeId
+	 * @return Edge object
+	 */
+	public Edge getEdgeByFollowerIdAndFolloweeId(long followerId, long followeeId) {
+		Edge edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
+		return edge;
+	}
+	
+	
+	
+	
+	
+	
 	//--------------UTIL---------------//
 	
 	private <T> List<T> toList(Iterable<T> iterable){
