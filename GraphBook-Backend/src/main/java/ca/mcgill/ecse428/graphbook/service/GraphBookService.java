@@ -37,6 +37,27 @@ public class GraphBookService {
 	@Autowired
 	CourseOfferingRepository courseOfferingRepository;
 	
+	
+	
+	//-------GENERAL METHODS---//
+	
+	
+	/**
+	 * Login student by emailAddress
+	 * @param authenticationToken
+	 * @param password
+	 * @return Student object
+	 */
+	public Student login(String emailAddress, String password) {
+		Student st = studentRepository.findByEmailAddress(emailAddress);
+		if(st != null) {
+			if (st.getPassword().equals(password)) {
+				return st;
+			}
+		}
+		return null;
+	}
+	
 	//--------STUDENT----------//
 	
 	/**
@@ -528,6 +549,33 @@ public class GraphBookService {
 		return edge;
 		
 	}
+	
+	/**
+	 * Finds all edges for a given followee and status
+	 * @param status
+	 * @param followeeId
+	 * @return list of edges
+	 */
+	public List<Edge> getEdgeByStatusAndFolloweeId(String status, long followeeId) {
+		List<Edge> edges = edgeRepository.findByStatusAndFolloweeId(status, followeeId);
+		return edges;
+	}
+	
+	/**
+	 * Finds edge by followerId and followeeId
+	 * @param followerId
+	 * @param followeeId
+	 * @return Edge object
+	 */
+	public Edge getEdgeByFollowerIdAndFolloweeId(long followerId, long followeeId) {
+		Edge edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
+		return edge;
+	}
+	
+	
+	
+	
+	
 	
 	//--------------UTIL---------------//
 	
