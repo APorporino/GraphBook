@@ -8,3 +8,8 @@ build/
 graphbook-backend/bin/
 
 **/.DS_Store
+/bin/
+
+.classpath
+.settings
+.project

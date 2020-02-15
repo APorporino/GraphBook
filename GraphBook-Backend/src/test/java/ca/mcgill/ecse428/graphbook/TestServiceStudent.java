@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.graphbook;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -630,7 +631,62 @@ public class TestServiceStudent {
 			assertFalse(service.validateEmailAddressFormat(invalidEmailAddresses[i]));
 		}
 	}
+	
+	@Test
+	public void test_findStudentValidEmailAndPassword() {
+		// create student
+		assertEquals(0, service.getAllStudents().size());
 
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+		
+		try {
+			Student created = service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, password);
+			assertEquals(created, returned);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void test_findStudentIncorrectPassword() {
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+		
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+			Student created = service.getStudentByEmailAddress(emailAddress);
+			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, "123");
+			assertNotEquals(created, returned);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+	}
+
+	@Test
+	public void test_findNonExistantStudentByEmail() {
+		assertEquals(0, service.getAllStudents().size());
+		String error = null;
+
+		try {
+			service.getStudentByEmailAddressAndPassword("email", "123");
+		} catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertTrue(error.contains("Student not found."));
+		
+	}
 	
 
 

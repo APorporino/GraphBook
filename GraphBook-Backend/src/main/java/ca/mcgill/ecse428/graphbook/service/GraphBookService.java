@@ -145,8 +145,14 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public Student getStudentByStudentId(long studentId) {
-		
+		String error = "";
 		Student student = studentRepository.findByStudentId(studentId);
+		if (student == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return student;
 	}
 	
@@ -157,7 +163,14 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public List<Student> getStudentByFirstName(String firstName) {
+		String error = "";
 		List<Student> students = studentRepository.findByFirstName(firstName);
+		if (students == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return students;
 	}
 	
@@ -168,8 +181,15 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public List<Student> getStudentsByCourseOfferingId(long courseOfferingId){
+		String error = "";
 		CourseOffering courseOffering = this.getCourseOfferingByCourseOfferingId(courseOfferingId);
 		List<Student> students = toList(courseOffering.getStudents());
+		if (students == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return students;
 	}
 	
@@ -180,7 +200,14 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public List<Student> getStudentByLastName(String lastName) {
+		String error = "";
 		List<Student> students = studentRepository.findByLastName(lastName);
+		if (students == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return students;
 	}
 	
@@ -192,7 +219,14 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public List<Student> getStudentByFirstNameAndLastName(String firstName, String lastName) {
+		String error = "";
 		List<Student> students = studentRepository.findByFirstNameAndLastName(firstName, lastName);
+		if (students == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return students;
 	}
 	
@@ -203,7 +237,33 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public Student getStudentByEmailAddress(String emailAddress) {
+		String error = "";
 		Student student = studentRepository.findByEmailAddress(emailAddress);
+		if (student == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		return student;
+	}
+	
+	/**
+	 * Find student by unique email and password
+	 * @param email
+	 * @param password
+	 * @return Student object
+	 */
+	@Transactional
+	public Student getStudentByEmailAddressAndPassword(String emailAddress, String password) {
+		String error = "";
+		Student student = studentRepository.findByEmailAddressAndPassword(emailAddress, password);
+		if (student == null) {
+			error = error + "Student not found.";
+		}
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		return student;
 	}
 	
