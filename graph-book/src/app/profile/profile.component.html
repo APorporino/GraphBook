@@ -1,1 +1,111 @@
-<p>profile works!</p>
+
+
+<mat-card class="example-card">
+    <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>John Smith</mat-card-title>
+        <mat-card-subtitle>I love dogs</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+        <p>
+            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+            bred for hunting.
+        </p>
+    </mat-card-content>
+
+</mat-card>
+
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                My username
+            </mat-panel-title>
+            <mat-panel-description>
+                johnsmith23
+            </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput>
+        </mat-form-field>
+        <div>
+            <button mat-stroked-button color="warn">Save</button>
+        </div>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                My name
+            </mat-panel-title>
+            <mat-panel-description>
+                John Smith
+            </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+            <mat-label>First name</mat-label>
+            <input matInput>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Last name</mat-label>
+            <input matInput>
+        </mat-form-field>
+        <div>
+            <button mat-stroked-button color="warn">Save</button>
+        </div>
+
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                My age
+            </mat-panel-title>
+            <mat-panel-description>
+                45
+            </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+            <mat-label>Date of birth</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div>
+            <button mat-stroked-button color="warn">Save</button>
+        </div>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                My email
+            </mat-panel-title>
+            <mat-panel-description>
+                john@email.com
+            </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+            <mat-label>Email-address</mat-label>
+            <input matInput>
+        </mat-form-field>
+        <div>
+            <button mat-stroked-button color="warn">Save</button>
+        </div>
+
+    </mat-expansion-panel>
+</mat-accordion>
