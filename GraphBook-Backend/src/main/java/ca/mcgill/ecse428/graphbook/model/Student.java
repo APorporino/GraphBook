@@ -1,19 +1,14 @@
 package ca.mcgill.ecse428.graphbook.model;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-
-import org.hibernate.annotations.Type;
 
 @Entity 
 public class Student {
@@ -67,13 +62,23 @@ public class Student {
 	
 	private Set<CourseOffering> courseOfferings;
 	
-	@ManyToMany(mappedBy = "students")
+	@ManyToMany(mappedBy="students")
 	public Set<CourseOffering> getCourseOfferings(){
 		return this.courseOfferings;
 	}
 	
 	public void setCourseOfferings(Set<CourseOffering> courseOfferings) {
 		this.courseOfferings = courseOfferings;
+	}
+	
+	private Date createdDate;
+
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 	private String bio;
@@ -86,31 +91,18 @@ public class Student {
 	public void setBio(String bio) {
         this.bio = bio;
     }
-
 	
-	private Date createdDate;
-
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	/**
+	 * String will be used as a link to a users profile picture.
+	 */
+	public String avatar;
+	
+	public String getAvatar() {
+		return this.avatar;
 	}
 	
-	private List<Edge> connections;
-	
-	@ManyToMany
-	@JoinTable(
-			  name = "connections", 
-			  joinColumns = @JoinColumn(name = "student_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "edge_id"))
-	public List<Edge> getConnections(){
-		return this.connections;
-	}
-	
-	public void setConnections(List<Edge> connections) {
-		this.connections = connections;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 }

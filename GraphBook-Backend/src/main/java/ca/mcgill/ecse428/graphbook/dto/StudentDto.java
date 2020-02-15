@@ -17,6 +17,7 @@ public class StudentDto {
 	private Set<CourseOffering> courseOfferings;
 	private Date createdDate;
 	private String bio;
+	private String avatar;
 	private List<Edge> connections;
 	
 	public StudentDto() {
@@ -112,6 +113,14 @@ public class StudentDto {
 	
 	public void setConnections(List<Edge> connections) {
 		this.connections = connections;
+	}
+	
+	public String getAvatar() {
+		return this.avatar;
+	}
+	
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 	
 	

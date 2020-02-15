@@ -11,6 +11,7 @@ import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,6 +74,41 @@ public class GraphBookRestController {
 		
 	}
 	
+	//	@GetMapping(value = { "/students/getByUsername" })
+	//	public StudentDto getStudentByUsername(@RequestParam("username") String username) {
+	//		//TODO finish this method
+	//	}
+	
+	/**
+	 * Allows a student to update their username, provided the new username is not already taken
+	 * @param studentId
+	 * @param newUsername
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated username
+	 */
+	@PostMapping(value = { "/{studentId}/profile/username" })
+	public StudentDto updateStudentUsername(@PathVariable long studentId, @RequestParam("newUsername") String newUsername) {
+		//		if(getStudentByUsername(newUsername) != null) {
+		//			throw new Exception("Username is already taken.");
+		//		}
+		
+		Student student = service.getStudentByStudentId(studentId);
+		//student.setUsername(newUsername);
+		return convertToDto(student);
+		
+	}
+	
+	/**
+	 * Allows a student to update their avatar
+	 * @param studentId
+	 * @param newAvatar
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated avatar
+	 */
+	@PostMapping(value = { "/{studentId}/profile/avatar" })
+	public StudentDto updateStudentAvatar(@PathVariable long studentId, @RequestParam("newAvatar") String newAvatar) {
+		Student student = service.updateStudentAvatar(studentId, newAvatar);
+		return convertToDto(student);
+	}
+
 	/**
 	 * Gets all students.
 	 * @return
@@ -86,16 +122,7 @@ public class GraphBookRestController {
 		
 		return students;
 		
-	}
-	
-	
-	
-	
-	//TODO
-	//method to update a users profile pic
-	
-	//We currently dont have that in the model however so lets wait.
-	
+	}	
 	
 	
 	
@@ -126,7 +153,7 @@ public class GraphBookRestController {
 		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setBio(student.getBio());
-		studentDto.setConnections(student.getConnections());
+		studentDto.setAvatar(student.getAvatar());
 		studentDto.setCourseOfferings(student.getCourseOfferings());
 		
 		return studentDto;
