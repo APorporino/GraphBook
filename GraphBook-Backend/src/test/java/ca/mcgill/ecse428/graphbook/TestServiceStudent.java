@@ -116,7 +116,7 @@ public class TestServiceStudent {
 
 		List<Student> students = service.getAllStudents();
 
-		assertEquals(error, "First name must be specified!");
+		assertEquals("First name must be specified!", error);
 		assertEquals(0, students.size());
 
 	}
@@ -594,7 +594,7 @@ public class TestServiceStudent {
 		String newAvatar = "http://www.fb.com/mikeTysonPicture2";
 
 		try {
-			service.updateStudentBio(studentId, newAvatar);
+			service.updateStudentAvatar(studentId, newAvatar);
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
