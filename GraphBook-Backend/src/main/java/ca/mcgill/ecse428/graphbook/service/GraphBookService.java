@@ -95,7 +95,7 @@ public class GraphBookService {
 		else if (emailAddress.trim().equals("")) {
 			error += "Email address must be specified! ";
 		}
-		else if (getStudentByEmailAddress(emailAddress) != null) {
+		else if (studentRepository.findByEmailAddress(emailAddress) != null) {
 			error += "Student with that email address already exists! ";
 		}
 		if(password == null) {
@@ -104,7 +104,7 @@ public class GraphBookService {
 		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
-		if (getStudentByStudentId(studentId) != null) {
+		if (studentRepository.findByStudentId(studentId) != null) {
 			error += "Student with that studentId already exists! ";
 		}
 		error = error.trim();
