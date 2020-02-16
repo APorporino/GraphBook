@@ -548,6 +548,60 @@ public class TestServiceStudent {
 		assertEquals(newBio, students.get(0).getBio());
 
 	}
+	
+	@Test
+	public void updateStudentAvatar() {
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Mike";
+		String lastName = "Tyson";
+		long studentId = 255654211;
+		String emailAddress = "mike.tyson@mail.com";
+		String password = "mt";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<Student> students = service.getAllStudents();
+
+		assertEquals(1, students.size());
+		assertEquals(firstName, students.get(0).getFirstName());
+		assertEquals(lastName, students.get(0).getLastName());
+		assertEquals(studentId, students.get(0).getStudentId());
+		assertEquals(emailAddress, students.get(0).getEmailAddress());
+		assertEquals(password, students.get(0).getPassword());
+		assertEquals(createdDate, students.get(0).getCreatedDate());
+
+		String avatar = "http://www.fb.com/mikeTysonPicture1";
+
+		try {
+			service.updateStudentAvatar(studentId, avatar);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		students = service.getAllStudents();
+
+		assertEquals(avatar, students.get(0).getAvatar());
+
+		String newAvatar = "http://www.fb.com/mikeTysonPicture2";
+
+		try {
+			service.updateStudentBio(studentId, newAvatar);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		students = service.getAllStudents();
+
+		assertEquals(newAvatar, students.get(0).getAvatar());
+
+	}
 
 	@Test
 	public void updateEmailAddressWithValidEmailAddress() {
@@ -593,7 +647,7 @@ public class TestServiceStudent {
 		assertEquals(newEmailAddress, students.get(0).getEmailAddress());
 		
 	}
-
+	
 	@Test
 	public void testValidEmailAddressFormat() {
 		
@@ -688,7 +742,6 @@ public class TestServiceStudent {
 		
 	}
 	
-
 
 
 

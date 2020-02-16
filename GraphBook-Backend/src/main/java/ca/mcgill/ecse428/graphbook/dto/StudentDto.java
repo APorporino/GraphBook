@@ -13,7 +13,6 @@ public class StudentDto {
 	private String firstName;
 	private String lastName;
 	private String emailAddress;
-	private String password;
 	private Set<CourseOffering> courseOfferings;
 	private Date createdDate;
 	private String bio;
@@ -25,12 +24,11 @@ public class StudentDto {
 	}
 	
 	public StudentDto(long studentId, String firstName, String lastName, String emailAddress, 
-			String password, Set<CourseOffering> courseOfferings, Date createdDate, String bio, List<Edge> connections) {
+			Set<CourseOffering> courseOfferings, Date createdDate, String bio, List<Edge> connections) {
 		this.studentId = studentId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
-		this.password = password;
 		this.courseOfferings = courseOfferings;
 		this.createdDate = createdDate;
 		this.bio = bio;
@@ -71,16 +69,6 @@ public class StudentDto {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
-	
-	
-	public String getPassword() {
-		return this.password;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
 	
 	public Set<CourseOffering> getCourseOffering() {
 		return this.courseOfferings;
