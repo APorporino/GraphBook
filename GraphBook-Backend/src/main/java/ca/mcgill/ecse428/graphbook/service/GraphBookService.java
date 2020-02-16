@@ -95,17 +95,22 @@ public class GraphBookService {
 		else if (emailAddress.trim().equals("")) {
 			error += "Email address must be specified! ";
 		}
-		else if (getStudentByEmailAddress(emailAddress) != null) {
-			error += "Student with that email address already exists! ";
-		}
 		if(password == null) {
 			error += "Password must be specified! ";
 		}
 		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
-		if (getStudentByStudentId(studentId) != null) {
-			error += "Student with that studentId already exists! ";
+		try {
+			getStudentByEmailAddress(emailAddress);
+			getStudentByStudentId(studentId);
+		} catch(IllegalArgumentException e) {
+			if (!e.getMessage().contains("Student with this email not found.")) {
+				error += "Student with that email address already exists!";
+			}
+			if (!e.getMessage().contains("Student with this Id not found.")) {
+				error += "Student with that studentId already exists!";
+			}
 		}
 		error = error.trim();
 		if(error.length() > 0) {
@@ -148,7 +153,7 @@ public class GraphBookService {
 		String error = "";
 		Student student = studentRepository.findByStudentId(studentId);
 		if (student == null) {
-			error = error + "Student not found.";
+			error = error + "Student with this Id not found.";
 		}
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -166,7 +171,7 @@ public class GraphBookService {
 		String error = "";
 		List<Student> students = studentRepository.findByFirstName(firstName);
 		if (students == null) {
-			error = error + "Student not found.";
+			error = error + "Student with this first name not found.";
 		}
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -203,7 +208,7 @@ public class GraphBookService {
 		String error = "";
 		List<Student> students = studentRepository.findByLastName(lastName);
 		if (students == null) {
-			error = error + "Student not found.";
+			error = error + "Student with this last name not found.";
 		}
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -222,7 +227,7 @@ public class GraphBookService {
 		String error = "";
 		List<Student> students = studentRepository.findByFirstNameAndLastName(firstName, lastName);
 		if (students == null) {
-			error = error + "Student not found.";
+			error = error + "Student with this name not found.";
 		}
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -240,7 +245,7 @@ public class GraphBookService {
 		String error = "";
 		Student student = studentRepository.findByEmailAddress(emailAddress);
 		if (student == null) {
-			error = error + "Student not found.";
+			error = error + "Student with this email not found.";
 		}
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);

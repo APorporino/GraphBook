@@ -649,7 +649,7 @@ public class TestServiceStudent {
 	}
 	
 	@Test
-	public void testValidEmailAddressFormat() {
+	public void validEmailAddressFormat() {
 		
 		String validEmailAddress1 = "jim.flim@gmail.com";
 		String validEmailAddress2 = "felix.sim@gmail.ca";
@@ -660,7 +660,7 @@ public class TestServiceStudent {
 				validEmailAddress1,
 				validEmailAddress2,
 				validEmailAddress3,
-				validEmailAddress3
+				validEmailAddress4
 		};
 		
 		String invalidEmailAddress1 = "jimmyflimmy";
@@ -687,7 +687,7 @@ public class TestServiceStudent {
 	}
 	
 	@Test
-	public void test_findStudentValidEmailAndPassword() {
+	public void findStudentValidEmailAndPassword() {
 		// create student
 		assertEquals(0, service.getAllStudents().size());
 
@@ -708,7 +708,7 @@ public class TestServiceStudent {
 	}
 	
 	@Test
-	public void test_findStudentIncorrectPassword() {
+	public void findStudentIncorrectPassword() {
 		assertEquals(0, service.getAllStudents().size());
 
 		String firstName = "Jimmy";
@@ -729,7 +729,7 @@ public class TestServiceStudent {
 	}
 
 	@Test
-	public void test_findNonExistantStudentByEmail() {
+	public void findNonExistantStudentByEmail() {
 		assertEquals(0, service.getAllStudents().size());
 		String error = null;
 
