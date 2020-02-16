@@ -39,7 +39,7 @@ public class GraphBookRestController {
 	 * @throws IllegalArgumentException
 	 */
 	@PostMapping(value = { "/students/createStudent", "/students/createStudent/" })
-	public StudentDto createPerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, 
+	public StudentDto createStudent(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, 
 			@RequestParam("studentId") long studentId, @RequestParam("password") String password, 
 			@RequestParam("emailAddress") String emailAddress) throws IllegalArgumentException {
 		
@@ -74,25 +74,15 @@ public class GraphBookRestController {
 		
 	}
 	
-	//	@GetMapping(value = { "/students/getByUsername" })
-	//	public StudentDto getStudentByUsername(@RequestParam("username") String username) {
-	//		//TODO finish this method
-	//	}
-	
 	/**
-	 * Allows a student to update their username, provided the new username is not already taken
+	 * Allows a student to update their email, provided the new email is not already taken
 	 * @param studentId
-	 * @param newUsername
-	 * @return StudentDto StudentDto object corresponding to the specified student with the updated username
+	 * @param newEmail
+	 * @return StudentDto StudentDto object corresponding to the specified student with the updated email
 	 */
 	@PostMapping(value = { "/{studentId}/profile/username" })
-	public StudentDto updateStudentUsername(@PathVariable long studentId, @RequestParam("newUsername") String newUsername) {
-		//		if(getStudentByUsername(newUsername) != null) {
-		//			throw new Exception("Username is already taken.");
-		//		}
-		
-		Student student = service.getStudentByStudentId(studentId);
-		//student.setUsername(newUsername);
+	public StudentDto updateStudentEmail(@PathVariable long studentId, @RequestParam("newUsername") String newEmail) {
+		Student student = service.updateStudentEmailAddress(studentId, newEmail);
 		return convertToDto(student);
 		
 	}
@@ -150,7 +140,6 @@ public class GraphBookRestController {
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setEmailAddress(student.getEmailAddress());
 		studentDto.setCreatedDate(student.getCreatedDate());
-		studentDto.setPassword(student.getPassword());
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setBio(student.getBio());
 		studentDto.setAvatar(student.getAvatar());
