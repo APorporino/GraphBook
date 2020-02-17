@@ -1,6 +1,6 @@
 package ca.mcgill.ecse428.graphbook;
 
-import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -12,7 +12,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 //import org.junit.runner.RunWith;
@@ -767,7 +767,7 @@ public class TestServiceStudent {
 		try {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 		} catch(IllegalArgumentException e) {
-			Assert.fail();
+			fail();
 		}
 
 		List<Student> students = service.getAllStudents();
@@ -784,7 +784,7 @@ public class TestServiceStudent {
 		try {
 			service.login(emailAddress, password);
 		} catch(IllegalArgumentException e) {
-			Assert.fail();
+			fail();
 		}
 
 		assertEquals(firstName, students.get(0).getFirstName());
@@ -811,7 +811,7 @@ public class TestServiceStudent {
 		try {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 		} catch(IllegalArgumentException e) {
-			Assert.fail();
+			fail();
 		}
 
 		List<Student> students = service.getAllStudents();
@@ -829,9 +829,9 @@ public class TestServiceStudent {
 		try {
 			st = service.login(emailAddress, attemptedPassword);
 		} catch(IllegalArgumentException e) {
-			Assert.fail();
+			fail();
 		}
-		assertNull(st);
+		assertEquals(null, st);
 	}
 
 	@Test
@@ -845,10 +845,10 @@ public class TestServiceStudent {
 		try {
 			st = service.login(emailAddress, password);
 		} catch(IllegalArgumentException e) {
-			Assert.fail();
+			fail();
 		}
 
-		assertNull(st);
+		assertEquals(null, st);
 	}
 
 	@Test
