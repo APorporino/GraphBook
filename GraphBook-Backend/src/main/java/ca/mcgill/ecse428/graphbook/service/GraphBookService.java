@@ -297,6 +297,14 @@ public class GraphBookService {
 	@Transactional
 	public Student updateStudentEmailAddress(long studentId, String emailAddress) {
 		Student student = studentRepository.findByStudentId(studentId);
+		String error = "";
+		if(studentRepository.findByEmailAddress(emailAddress) != null) {
+			error += "Email address already exists.";
+		}
+		
+		if(error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		student.setEmailAddress(emailAddress);
 		studentRepository.save(student);
 		return student;
