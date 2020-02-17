@@ -101,23 +101,13 @@ public class GraphBookService {
 		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
-		try {
-			getStudentByEmailAddress(emailAddress);
-		} catch(IllegalArgumentException e) {
-			if (!e.getMessage().contains("Student with this email not found.")) {
-				error += "Student with that email address already exists!";
-			}
-		}
 		
-		try {
-			getStudentByStudentId(studentId);
-		} catch(IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-			if (!e.getMessage().contains("Student with this Id not found.")) {
-				error += "Student with that studentId already exists!";
-			}
+		if (studentRepository.findByEmailAddress(emailAddress) != null) {
+			error += "Student with that email address already exists!";
 		}
-		
+		if (studentRepository.findByStudentId(studentId) != null) {
+			error += "Student with that studentId already exists!";
+		}
 		
 		error = error.trim();
 		if(error.length() > 0) {

@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+//import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,7 +22,7 @@ import ca.mcgill.ecse428.graphbook.model.CourseOffering;
 import ca.mcgill.ecse428.graphbook.model.Student;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestServiceStudent {
 
@@ -723,14 +723,17 @@ public class TestServiceStudent {
 		String password = "jimmy";
 		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
 		
+		String error = "";
+		
 		try {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
-			Student created = service.getStudentByEmailAddress(emailAddress);
 			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, "123");
-			assertNotEquals(created.getPassword(), returned.getPassword());
+			assertEquals(null, returned);
 		} catch(IllegalArgumentException e) {
-			fail();
+			error = e.getMessage();
 		}
+		
+		assertEquals(error, "Student not found.");
 	}
 
 	@Test
