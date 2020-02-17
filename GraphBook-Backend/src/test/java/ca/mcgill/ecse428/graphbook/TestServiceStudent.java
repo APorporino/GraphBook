@@ -35,7 +35,7 @@ public class TestServiceStudent {
 	}
 
 	@BeforeEach
-	public void deleteStudents2() {
+	public void deleteStudents() {
 		service.deleteAllCourseOfferings();
 		service.deleteAllCourses();
 		service.deleteAllStudents();	
