@@ -1,20 +1,43 @@
 package ca.mcgill.ecse428.graphbook;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.sql.Date;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import ca.mcgill.ecse428.graphbook.model.Student;
+import ca.mcgill.ecse428.graphbook.service.GraphBookService;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TestGraphBookService {
 
-	@Before
-	public void setup() {
-
+	
+	@Autowired
+	private GraphBookService service;
+	
+	
+	@Test
+	void contextLoads() {
 	}
 
-	@After
-	public void tearDown() {
+	@BeforeEach
+	public void deleteStudents2() {
+		service.deleteAllCourseOfferings();
+		service.deleteAllCourses();
+		service.deleteAllStudents();	
 
 	}
 
@@ -47,7 +70,7 @@ public class TestGraphBookService {
 		assertEquals(createdDate, students.get(0).getCreatedDate());
 
 		//now login user
-		Student st;
+		Student st = null;
 
 		try {
 			st = service.login(emailAddress, password);
@@ -93,7 +116,7 @@ public class TestGraphBookService {
 
 		//now login user
 		String attemptedPassword = "jimy";
-		Student st;
+		Student st = null;
 		try {
 			st = service.login(emailAddress, attemptedPassword);
 		} catch(IllegalArgumentException e) {
@@ -104,11 +127,11 @@ public class TestGraphBookService {
 
 	@Test
 	public void testLoginUserDoesNotExist() {
-		assertEquals(0, servide.getAllStudents().size());
+		assertEquals(0, service.getAllStudents().size());
 
 		String emailAddress = "jimmy.flimmy@mail.com";
 		String password = "jimmy";
-		Student st;
+		Student st = null;
 
 		try {
 			service.login(emailAddress, password);

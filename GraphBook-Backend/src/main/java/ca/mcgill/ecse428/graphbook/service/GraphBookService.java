@@ -103,15 +103,22 @@ public class GraphBookService {
 		}
 		try {
 			getStudentByEmailAddress(emailAddress);
-			getStudentByStudentId(studentId);
 		} catch(IllegalArgumentException e) {
 			if (!e.getMessage().contains("Student with this email not found.")) {
 				error += "Student with that email address already exists!";
 			}
+		}
+		
+		try {
+			getStudentByStudentId(studentId);
+		} catch(IllegalArgumentException e) {
+			System.out.println(e.getMessage());
 			if (!e.getMessage().contains("Student with this Id not found.")) {
 				error += "Student with that studentId already exists!";
 			}
 		}
+		
+		
 		error = error.trim();
 		if(error.length() > 0) {
 			throw new IllegalArgumentException(error);

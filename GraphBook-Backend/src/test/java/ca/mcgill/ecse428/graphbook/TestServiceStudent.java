@@ -289,7 +289,7 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-
+		
 		List<Student> students = service.getAllStudents();
 		assertEquals(1, students.size());
 		assertEquals(firstName, students.get(0).getFirstName());
@@ -302,11 +302,10 @@ public class TestServiceStudent {
 		// now the second student
 		String firstName2 = "Jimmy2";
 		String lastName2 = "Flimmy2";
-		long studentId2 = 255654211;
+		long studentId2 = students.get(0).getStudentId();
 		String emailAddress2 = "jimmy.flimmythesecond@mail.com";
 		String password2 = "jimmy2";
 		Date createdDate2 = Date.valueOf(LocalDate.now(Clock.systemUTC()));
-
 		String error = "";
 		try {
 			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate2);
@@ -399,6 +398,7 @@ public class TestServiceStudent {
 		try {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 		} catch(IllegalArgumentException e) {
+			System.out.println(e.getMessage());
 			fail();
 		}
 
@@ -703,10 +703,13 @@ public class TestServiceStudent {
 		try {
 			Student created = service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, password);
-			assertEquals(created, returned);
+			assertEquals(created.getEmailAddress(), returned.getEmailAddress());
+			assertEquals(created.getPassword(), returned.getPassword());
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
+		
+		
 	}
 	
 	@Test
@@ -724,7 +727,7 @@ public class TestServiceStudent {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 			Student created = service.getStudentByEmailAddress(emailAddress);
 			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, "123");
-			assertNotEquals(created, returned);
+			assertNotEquals(created.getPassword(), returned.getPassword());
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
