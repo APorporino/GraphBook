@@ -1,10 +1,5 @@
-import {Component, Inject} from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-
-export interface DialogData {
-  animal: string;
-  name: string;
-}
+import {Component} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -33,8 +28,7 @@ export class AppComponent {
 })
 export class LogoutDialog {
   constructor(
-      public dialogRef: MatDialogRef<LogoutDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+      public dialogRef: MatDialogRef<LogoutDialog>) {}
 
   onNoClick(): void {
     this.dialogRef.close();
