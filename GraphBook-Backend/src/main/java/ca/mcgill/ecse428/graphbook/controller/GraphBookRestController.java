@@ -50,6 +50,24 @@ public class GraphBookRestController {
 	}
 	
 	/**
+	 * Logs in a student
+	 * @param email
+	 * @param password
+	 * 
+	 * @return StudentDto StudentDto object for the logged in student
+	 * @throws IllegalArgumentException if student credentials aren't correct or does not exist
+	 */
+	@GetMapping(value = { "/login", "/login/" })
+	public StudentDto login(@RequestParam("email") String email, @RequestParam("password") String password) throws IllegalArgumentException {
+		
+		Student student = service.login(email, password);
+		if (student == null) {
+			return null;
+		}
+		return convertToDto(student);
+	}
+	
+	/**
 	 * This method will update a users bio.
 	 * @param bio String representing the bio
 	 * 
