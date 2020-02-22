@@ -167,10 +167,10 @@ public class GraphBookService {
 	public List<Student> getStudentByFirstName(String firstName) {
 		String error = "";
 		List<Student> students = studentRepository.findByFirstName(firstName);
-		if (students == null) {
-			error = error + "Student with this first name not found.";
+		if (students.size() == 0) {
+			error += "Student with this first name not found.";
 		}
-		if (error.length() > 0) {
+		if (error.trim().length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
 		return students;
@@ -204,7 +204,7 @@ public class GraphBookService {
 	public List<Student> getStudentByLastName(String lastName) {
 		String error = "";
 		List<Student> students = studentRepository.findByLastName(lastName);
-		if (students == null) {
+		if (students.size() == 0) {
 			error = error + "Student with this last name not found.";
 		}
 		if (error.length() > 0) {

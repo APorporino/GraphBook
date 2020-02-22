@@ -1046,11 +1046,209 @@ public class TestServiceStudent {
 		assertEquals(firstName, studentsWithFirstNameJimmy.get(0).getFirstName());
 		assertEquals(studentId, studentsWithFirstNameJimmy.get(0).getStudentId());
 		assertEquals(firstName2, studentsWithFirstNameJimmy.get(1).getFirstName());
-		assertEquals(studentId2, studentsWithFirstNameJimmy.get(1).getStudentId());
-		
-		
+		assertEquals(studentId2, studentsWithFirstNameJimmy.get(1).getStudentId());	
 
 	}
+	
+	@Test
+	public void findZeroStudentsWithInvalidFirstName() {
+
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create the second student with the same first name
+		assertEquals(1, service.getAllStudents().size());
+
+		String firstName2 = firstName;
+		String lastName2 = "GrandMaster";
+		long studentId2 = 255654212;
+		String emailAddress2 = "jimmy.GrandMaster@mail.com";
+		String password2 = "GrandMaster";
+
+		try {
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create a third student with a different first name
+		assertEquals(2, service.getAllStudents().size());
+
+		String firstName3 = "Jim";
+		String lastName3 = "Halpert";
+		long studentId3 = 255654213;
+		String emailAddress3 = "jim.halpert@mail.com";
+		String password3 = "halpert";
+
+		try {
+			service.createStudent(firstName3, lastName3, studentId3, emailAddress3, password3, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// assert all three students were created
+		assertEquals(3, service.getAllStudents().size());
+		
+		List<Student> studentsWithFirstNameMark;
+		String error = "";
+		
+		try {
+			studentsWithFirstNameMark = service.getStudentByFirstName("Mark");
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Student with this first name not found.", error);
+
+	}
+	
+	@Test
+	public void findMultipleStudentsByValidLastName() {
+
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create the second student with the same first name
+		assertEquals(1, service.getAllStudents().size());
+
+		String firstName2 = "GrandMaster";
+		String lastName2 = lastName;
+		long studentId2 = 255654212;
+		String emailAddress2 = "jimmy.GrandMaster@mail.com";
+		String password2 = "GrandMaster";
+
+		try {
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create a third student with a different first name
+		assertEquals(2, service.getAllStudents().size());
+
+		String firstName3 = "Jim";
+		String lastName3 = "Halpert";
+		long studentId3 = 255654213;
+		String emailAddress3 = "jim.halpert@mail.com";
+		String password3 = "halpert";
+
+		try {
+			service.createStudent(firstName3, lastName3, studentId3, emailAddress3, password3, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// assert all three students were created
+		assertEquals(3, service.getAllStudents().size());
+		
+		List<Student> studentsWithLastNameFlimmy = null; 
+		try {
+			studentsWithLastNameFlimmy = service.getStudentByLastName("Flimmy");
+		} catch (Exception e) {
+			fail();
+		}
+		
+		
+		assertEquals(2, studentsWithLastNameFlimmy.size());
+		assertEquals(lastName, studentsWithLastNameFlimmy.get(0).getLastName());
+		assertEquals(studentId, studentsWithLastNameFlimmy.get(0).getStudentId());
+		assertEquals(lastName2, studentsWithLastNameFlimmy.get(1).getLastName());
+		assertEquals(studentId2, studentsWithLastNameFlimmy.get(1).getStudentId());	
+
+	}
+	
+	@Test
+	public void findZeroStudentsWithInvalidLastName() {
+
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create the second student with the same first name
+		assertEquals(1, service.getAllStudents().size());
+
+		String firstName2 = firstName;
+		String lastName2 = "GrandMaster";
+		long studentId2 = 255654212;
+		String emailAddress2 = "jimmy.GrandMaster@mail.com";
+		String password2 = "GrandMaster";
+
+		try {
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create a third student with a different first name
+		assertEquals(2, service.getAllStudents().size());
+
+		String firstName3 = "Jim";
+		String lastName3 = "Halpert";
+		long studentId3 = 255654213;
+		String emailAddress3 = "jim.halpert@mail.com";
+		String password3 = "halpert";
+
+		try {
+			service.createStudent(firstName3, lastName3, studentId3, emailAddress3, password3, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// assert all three students were created
+		assertEquals(3, service.getAllStudents().size());
+		
+		List<Student> studentsWithLastNameMark;
+		String error = "";
+		
+		try {
+			studentsWithLastNameMark = service.getStudentByLastName("Mark");
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Student with this last name not found.", error);
+
+	}
+	
+	
 
 
 
