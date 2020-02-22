@@ -290,7 +290,7 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-		
+
 		List<Student> students = service.getAllStudents();
 		assertEquals(1, students.size());
 		assertEquals(firstName, students.get(0).getFirstName());
@@ -551,7 +551,7 @@ public class TestServiceStudent {
 		assertEquals(newBio, students.get(0).getBio());
 
 	}
-	
+
 	@Test
 	public void updateStudentAvatar() {
 		// create the student
@@ -633,45 +633,45 @@ public class TestServiceStudent {
 		assertEquals(emailAddress, students.get(0).getEmailAddress());
 		assertEquals(password, students.get(0).getPassword());
 		assertEquals(createdDate, students.get(0).getCreatedDate());
-		
-		
+
+
 		String newEmailAddress = "jim.flim@mail.ca";
-		
+
 		try {
 			service.updateStudentEmailAddress(studentId, newEmailAddress);
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-		
+
 		students = service.getAllStudents();
-		
+
 		assertEquals(1, students.size());
 		assertEquals(studentId, students.get(0).getStudentId());
 		assertEquals(newEmailAddress, students.get(0).getEmailAddress());
-		
+
 	}
-	
+
 	@Test
 	public void validEmailAddressFormat() {
-		
+
 		String validEmailAddress1 = "jim.flim@gmail.com";
 		String validEmailAddress2 = "felix.sim@gmail.ca";
 		String validEmailAddress3 = "tony_porp@email.org";
 		String validEmailAddress4 = "a._b...__c@yahoo.net";
-		
+
 		String[] validEmailAddresses = {
 				validEmailAddress1,
 				validEmailAddress2,
 				validEmailAddress3,
 				validEmailAddress4
 		};
-		
+
 		String invalidEmailAddress1 = "jimmyflimmy";
 		String invalidEmailAddress2 = "jimflim@gmail";
 		String invalidEmailAddress3 = "jim.flim.jim@gmail.c";
 		String invalidEmailAddress4 = "tony.porp$$$$";
 		String invalidEmailAddress5 = "jimmyflimmy@email.como";
-		
+
 		String[] invalidEmailAddresses = {
 				invalidEmailAddress1,
 				invalidEmailAddress2,
@@ -679,16 +679,16 @@ public class TestServiceStudent {
 				invalidEmailAddress4,
 				invalidEmailAddress5
 		};
-		
+
 		for(int i = 0; i < validEmailAddresses.length; i++) {
 			assertTrue(service.validateEmailAddressFormat(validEmailAddresses[i]));
 		}
-		
+
 		for(int i = 0; i < invalidEmailAddresses.length; i++) {
 			assertFalse(service.validateEmailAddressFormat(invalidEmailAddresses[i]));
 		}
 	}
-	
+
 	@Test
 	public void findStudentValidEmailAndPassword() {
 		// create student
@@ -700,7 +700,7 @@ public class TestServiceStudent {
 		String emailAddress = "jimmy.flimmy@mail.com";
 		String password = "jimmy";
 		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
-		
+
 		try {
 			Student created = service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, password);
@@ -709,10 +709,10 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-		
-		
+
+
 	}
-	
+
 	@Test
 	public void findStudentIncorrectPassword() {
 		assertEquals(0, service.getAllStudents().size());
@@ -723,9 +723,9 @@ public class TestServiceStudent {
 		String emailAddress = "jimmy.flimmy@mail.com";
 		String password = "jimmy";
 		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
-		
+
 		String error = "";
-		
+
 		try {
 			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
 			Student returned = service.getStudentByEmailAddressAndPassword(emailAddress, "123");
@@ -733,7 +733,7 @@ public class TestServiceStudent {
 		} catch(IllegalArgumentException e) {
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Student not found.");
 	}
 
@@ -748,9 +748,9 @@ public class TestServiceStudent {
 			error = e.getMessage();
 		}
 		assertTrue(error.contains("Student not found."));
-		
+
 	}
-	
+
 	@Test
 	public void testLoginUser() {
 		//log in an exitsing user with correct email and studentId password
@@ -921,7 +921,7 @@ public class TestServiceStudent {
 
 	}
 
-@Test
+	@Test
 	public void searchExistingUserByID(){		//search for existing user by studentId
 		// create the student
 		assertEquals(0, service.getAllStudents().size());
@@ -986,6 +986,70 @@ public class TestServiceStudent {
 		students = service.getAllStudents();
 
 		assertNotEquals(students.get(0).getStudentId(), 123456789);
+	}
+
+	@Test
+	public void findMultipleStudentsByValidFirstName() {
+
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create the second student with the same first name
+		assertEquals(1, service.getAllStudents().size());
+
+		String firstName2 = firstName;
+		String lastName2 = "GrandMaster";
+		long studentId2 = 255654212;
+		String emailAddress2 = "jimmy.GrandMaster@mail.com";
+		String password2 = "GrandMaster";
+
+		try {
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// create a third student with a different first name
+		assertEquals(2, service.getAllStudents().size());
+
+		String firstName3 = "Jim";
+		String lastName3 = "Halpert";
+		long studentId3 = 255654213;
+		String emailAddress3 = "jim.halpert@mail.com";
+		String password3 = "halpert";
+
+		try {
+			service.createStudent(firstName3, lastName3, studentId3, emailAddress3, password3, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// assert all three students were created
+		assertEquals(3, service.getAllStudents().size());
+		
+		List<Student> studentsWithFirstNameJimmy = service.getStudentByFirstName("Jimmy");
+		
+		assertEquals(2, studentsWithFirstNameJimmy.size());
+		assertEquals(firstName, studentsWithFirstNameJimmy.get(0).getFirstName());
+		assertEquals(studentId, studentsWithFirstNameJimmy.get(0).getStudentId());
+		assertEquals(firstName2, studentsWithFirstNameJimmy.get(1).getFirstName());
+		assertEquals(studentId2, studentsWithFirstNameJimmy.get(1).getStudentId());
+		
+		
+
 	}
 
 
