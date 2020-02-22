@@ -223,7 +223,7 @@ public class GraphBookService {
 	public List<Student> getStudentByFirstNameAndLastName(String firstName, String lastName) {
 		String error = "";
 		List<Student> students = studentRepository.findByFirstNameAndLastName(firstName, lastName);
-		if (students == null) {
+		if (students.size() == 0) {
 			error = error + "Student with this name not found.";
 		}
 		if (error.length() > 0) {

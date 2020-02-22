@@ -1248,7 +1248,64 @@ public class TestServiceStudent {
 
 	}
 	
-	
+	@Test
+	public void findMultipleStudentsByValidLastNameAndFirstName() {
+
+		// create the student
+		assertEquals(0, service.getAllStudents().size());
+
+		String firstName = "Jimmy";
+		String lastName = "Flimmy";
+		long studentId = 255654211;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String password = "jimmy";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		String firstName2 = firstName;
+		String lastName2 = lastName;
+		long studentId2 = studentId + 1;
+		String emailAddress2 = "jimmy.GrandMaster@mail.com";
+		String password2 = "GrandMaster";
+
+		String firstName3 = "Jimmy";
+		String lastName3 = "Halpert";
+		long studentId3 = studentId2 + 1;
+		String emailAddress3 = "jim.halpert@mail.com";
+		String password3 = "halpert";
+
+		String firstName4 = "GrandMaster";
+		String lastName4 = "Flimmy";
+		long studentId4 = studentId3 + 1;
+		String emailAddress4 = "GrandMaster.halpert@mail.com";
+		String password4 = "PAULSIMON";
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+			service.createStudent(firstName3, lastName3, studentId3, emailAddress3, password3, createdDate);
+			service.createStudent(firstName4, lastName4, studentId4, emailAddress4, password4, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		// assert all three students were created
+		assertEquals(4, service.getAllStudents().size());
+		
+		List<Student> studentsWithFirstNameJimmyLastNameFlimmy = null; 
+		try {
+			studentsWithFirstNameJimmyLastNameFlimmy = service.getStudentByFirstNameAndLastName("Jimmy", "Flimmy");
+		} catch (Exception e) {
+			fail();
+		}
+		
+		
+		assertEquals(2, studentsWithFirstNameJimmyLastNameFlimmy.size());
+		assertEquals(lastName, studentsWithFirstNameJimmyLastNameFlimmy.get(0).getLastName());
+		assertEquals(studentId, studentsWithFirstNameJimmyLastNameFlimmy.get(0).getStudentId());	// uniqueness
+		assertEquals(lastName2, studentsWithFirstNameJimmyLastNameFlimmy.get(1).getLastName());
+		assertEquals(studentId2, studentsWithFirstNameJimmyLastNameFlimmy.get(1).getStudentId());	// uniqueness
+
+	}
 
 
 
