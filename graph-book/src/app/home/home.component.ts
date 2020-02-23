@@ -31,9 +31,6 @@ export class HomeComponent implements OnInit {
     }
     
     ngOnInit() {
-      this.getAllPosts().subscribe(data=>
-
-        console.log(data))
     }
 
 }
