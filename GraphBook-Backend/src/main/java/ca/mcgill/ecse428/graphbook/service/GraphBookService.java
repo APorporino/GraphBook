@@ -667,10 +667,42 @@ public class GraphBookService {
 		return edge;
 	}
 	
-	public boolean updateEdgeStatus(long followerId, long followeeId, Status status) {
-		boolean wasProcessed = false;
+	/**
+	 * Update the status of an edge to ACCEPTED or DECLINED, depending on the answer of the followee 
+	 * upon the reception of the relation invitation.
+	 * @param followerId
+	 * @param followeeId
+	 * @param status
+	 * @return the edge updated
+	 */
+	public Edge updateEdgeStatus(long followerId, long followeeId, Status status) {
+		String error = "";
+		Edge edge;
 		
-		return wasProcessed;
+		if(studentRepository.findByStudentId(followerId) == null) {
+			error += "No student was found with the follower studentId.";
+		}
+		if(studentRepository.findByStudentId(followeeId) == null) {
+			error += "No student was found with the followee studentId.";
+		}
+		
+		edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
+		
+		if(edge == null) {
+			error += "No edge currently exists between these two students.";
+		}
+		if (status == Status.PENDING) {
+			error += "You can only change the status of an edge to ACCEPTED or DECLINED.";
+		}
+		
+		error = error.trim();
+		if(error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
+		edge.setStatus(status);
+		
+		return edge;
 	}
 	
 	
