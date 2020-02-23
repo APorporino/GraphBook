@@ -598,11 +598,26 @@ public class GraphBookService {
 	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
 		
 		Edge edge;
+		String error = "";
 		
-		/*
-		 * TODO
-		 * Error checking
-		 */
+		if(studentRepository.findByStudentId(followerId) == null) {
+			error += "No student was found with the follower studentId.";
+		}
+		if(studentRepository.findByStudentId(followeeId) == null) {
+			error += "No student was found with the followee studentId.";
+		}
+		if (status == null) {
+			error += "An edge status needs to be specified upon creation.";
+		}
+		else if (status != Status.PENDING) {
+			error += "An edge status needs to be pending upon creaton.";
+		}
+		if(weight < 1 || weight > 10) {
+			error += "The weight of an edge needs to be within 1 and 10.";
+		}
+		if(edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId) != null) {
+			error += "An edge connecting these two students already exists.";
+		}
 		
 		edge = new Edge();
 		edge.setFollowerId(followerId);
@@ -611,13 +626,19 @@ public class GraphBookService {
 		edge.setWeight(weight);
 		edge.setCreatedDate(createdDate);
 		
-		/*
-		 * TODO
-		 * Save in the repository
-		 */
+		edgeRepository.save(edge);
 		
 		return edge;
 		
+	}
+	
+	/**
+	 * Return all the existing edges currently in the database.
+	 * @return List of all edge objects in the DB.
+	 */
+	public List<Edge> getAllEdges() {
+		List<Edge> edges = edgeRepository.findAll();
+		return edges;
 	}
 	
 	/**
@@ -626,7 +647,7 @@ public class GraphBookService {
 	 * @param followeeId
 	 * @return list of edges
 	 */
-	public List<Edge> getEdgeByStatusAndFolloweeId(String status, long followeeId) {
+	public List<Edge> getEdgesByStatusAndFolloweeId(String status, long followeeId) {
 		List<Edge> edges = edgeRepository.findByStatusAndFolloweeId(status, followeeId);
 		return edges;
 	}
