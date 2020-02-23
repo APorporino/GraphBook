@@ -1,1 +1,17 @@
-<p>connection works!</p>
+<mat-card class="project-card">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+        <h1>George Kandalaft</h1>
+
+        <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1582379990402-2202cb550fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80">
+        </div>
+    </div>
+    <mat-card-content>
+        <p> {{item.bio}} </p><br>
+        <p>Email: {{item.emailAddress}}</p>
+    </mat-card-content>
+    <button mat-button style="margin-bottom: 10px; margin-left: auto;
+        margin-right: auto; display: block; font-size: 20px; background: #303841;">
+        <span style="color: white;">Connect</span>
+    </button>
+</mat-card>
