@@ -4,4 +4,8 @@ export class Student {
     lastName:string;
     emailAddress:string;
     password:string;
+
+    constructor(){   
+    }
+    george = "geor";
 }

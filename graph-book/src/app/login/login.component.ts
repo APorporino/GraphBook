@@ -2,11 +2,15 @@ import { Component, OnInit,Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {Student} from '../student'
+import {CurrentUser} from "../../currentUser"
+
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
   
   @Input() signUpInfo = {
@@ -16,13 +20,34 @@ export class LoginComponent implements OnInit {
     emailAddress:'',
     password:'',
   }
-  @Input() error=''
-  @Input() message=''
+  @Input() signIn = {
+    email:'',
+    password:''
+  }
+  @Input() error='';
+  @Input() message='';
+  y= CurrentUser.constant2();
+
+  public currentUser: CurrentUser;
+
+  static constant2() { return "f"; }
   
   constructor(private http:HttpClient) { }
 
   ngOnInit(): void {
   }
+  login(){
+    let body = new HttpParams();
+    body = body.set('email', this.signIn.email);
+    body = body.set('password', this.signIn.password);
+    this.http.get<CurrentUser>('http://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
+      console.log(data);
+      if (data!= null){
+        this.currentUser=data;
+        console.log(this.currentUser)
+
+      }
+  });}
   createUser(){
     let body = new HttpParams();
     body = body.set('firstName', this.signUpInfo.firstName);
@@ -38,11 +63,12 @@ export class LoginComponent implements OnInit {
       this.error = error.error.message;
       }
     );
-   
   }
+ 
   // createUser(){
   //   this.http.post('http://graphbook-backend.herokuapp.com/students/createStudent',this.signUpInfo)
   //   console.log(this.signUpInfo)
   // }
 
 }
+

@@ -3,7 +3,8 @@ import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {MatCardModule} from '@angular/material/card';
 import {NgModule} from '@angular/core';
 import { Observable } from 'rxjs';
-
+import {LoginComponent} from "../login/login.component"
+import {CurrentUser} from "../../currentUser"
 
 
 @Component({
@@ -18,7 +19,8 @@ export class HomeComponent implements OnInit {
   readonly pageUrl = 'http://graphbook-backend.herokuapp.com/students';
   users: any; 
   
-    constructor(private http:HttpClient) { }
+  
+  constructor(private http:HttpClient) { }
     
     getUsers(): Observable<Object>{
       console.log("get users() works!")
