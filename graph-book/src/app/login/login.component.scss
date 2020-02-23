@@ -47,6 +47,14 @@ button {
     }
 }
 
+.error {
+    color: red;
+}
+
+.message {
+    color: green;
+}
+
 $sub-color: grey;
 $main-color: black;
 @mixin shrinkLabel {
@@ -81,13 +89,10 @@ $main-color: black;
         color: $sub-color;
         font-size: 16px;
         font-weight: normal;
-        position: absolute;
+        position: relative;
         pointer-events: none;
         left: 5px;
         top: 10px;
         transition: 300ms ease all;
-        &.shrink {
-            @include shrinkLabel();
-        }
     }
 }

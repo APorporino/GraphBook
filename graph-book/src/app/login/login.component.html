@@ -4,12 +4,13 @@
         <span>Sign in with your email and password</span>
         <form onSubmit={this.handleSubmit}>
             <div class="group">
-                <input type='email' class="form-input" name='email' required />
                 <label class="form-input-label">Email</label>
+                <input type='email' class="form-input" name='email' required />
             </div>
             <div class="group">
-                <input type='password' class="form-input" name='password' required />
                 <label class="form-input-label">Password</label>
+                <input type='password' class="form-input" name='password' required />
+
             </div>
             <div class='buttons'>
                 <button type='submit'> Sign in </button>
@@ -23,24 +24,37 @@
         <span>Sign up with your email and password</span>
         <form class='sign-up-form' onSubmit={this.handleSubmit}>
             <div class="group">
-                <input type='text' class="form-input" name='displayName' required />
+                <label class="form-input-label">Student ID</label>
+                <input type='number' class="form-input" name='studentId' [(ngModel)]="signUpInfo.studentId" required />
+
+            </div>
+            <div class="group">
                 <label class="form-input-label">First Name</label>
+                <input type='text' class="form-input" name='displayName' [(ngModel)]="signUpInfo.firstName" required />
+
             </div>
             <div class="group">
-                <input type='text' class="form-input" name='lastName' required />
                 <label class="form-input-label">Last Name</label>
+                <input type='text' class="form-input" name='lastName' [(ngModel)]="signUpInfo.lastName" required />
+
             </div>
             <div class="group">
-                <input type='email' class="form-input" name='email' required />
                 <label class="form-input-label">Email</label>
+                <input type='email' class="form-input" name='email' [(ngModel)]="signUpInfo.emailAddress" required />
+
             </div>
             <div class="group">
-                <input type='password' class="form-input" name='password' required />
                 <label class="form-input-label">Password</label>
+                <input type='password' class="form-input" name='password' [(ngModel)]="signUpInfo.password" required />
+
             </div>
 
 
-            <button type='submit'>Sign up</button>
+            <button type='submit' (click)="createUser()" [(ngModel)]="error">Sign up</button>
         </form>
     </div>
 </div>
+
+
+<p class="error">{{error}}</p>
+<p class="message">{{message}}</p>

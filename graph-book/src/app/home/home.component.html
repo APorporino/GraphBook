@@ -1,1 +1,27 @@
-<p>home works!</p>
+<button (click)='getUsers()'>Get Users</button>
+
+
+<div *ngFor="let user of users | async ">
+    <h3>ID: {{user.studentId}} - First Name: {{ user.studentFirstName | json}}</h3>
+    <p *ngIf="user.avatar; else random">
+        {{user.avatar}}
+    </p>
+    <ng-template #random>
+        <p>
+            <img style="width: 60px" src="https://via.placeholder.com/600/7dd663">
+        </p>
+    </ng-template>
+    <div>
+        Email: {{user.emailAddress}}
+    </div>
+    <div>
+        Bio: {{user.bio}}
+    </div>
+    <div>
+        {{user.courseOffering}} Created: {{ user.createdDate | json}}
+    </div>
+</div>
+
+<div *ngFor="let user of users | async ">
+    {{user.id}} {{ user.name }}
+</div>

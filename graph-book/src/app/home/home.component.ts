@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
+import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {MatCardModule} from '@angular/material/card';
 import {NgModule} from '@angular/core';
+import { Observable } from 'rxjs';
+
 
 
 @Component({
@@ -9,11 +12,28 @@ import {NgModule} from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 
+@Injectable({providedIn:'root'})
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  readonly pageUrl = 'http://graphbook-backend.herokuapp.com/students';
+  users: any; 
+  
+    constructor(private http:HttpClient) { }
+    
+    getUsers(): Observable<Object>{
+      console.log("get users() works!")
+      return this.users = this.http.get(this.pageUrl)
+      
+    }
 
-  ngOnInit(): void {
-  }
+    getAllPosts(): Observable<Object>{
+      return this.http.get('https://jsonplaceholder.typicode.com/posts')
+    }
+    
+    ngOnInit() {
+      this.getAllPosts().subscribe(data=>
+
+        console.log(data))
+    }
 
 }
