@@ -619,6 +619,10 @@ public class GraphBookService {
 			error += "An edge connecting these two students already exists.";
 		}
 		
+		if (error.trim().length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
 		edge = new Edge();
 		edge.setFollowerId(followerId);
 		edge.setFolloweeId(followeeId);
@@ -661,6 +665,12 @@ public class GraphBookService {
 	public Edge getEdgeByFollowerIdAndFolloweeId(long followerId, long followeeId) {
 		Edge edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
 		return edge;
+	}
+	
+	public boolean updateEdgeStatus(long followerId, long followeeId, Status status) {
+		boolean wasProcessed = false;
+		
+		return wasProcessed;
 	}
 	
 	
