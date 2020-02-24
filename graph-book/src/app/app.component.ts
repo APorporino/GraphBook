@@ -34,7 +34,7 @@ export class LogoutDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
-  //TODO: MUST TIE TO BACKEND TO ACTUALLY LOGOUT
+
   logout(): void {
     this.dialogRef.close();
     this.data.loggedIn(-1);
