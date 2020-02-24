@@ -1,4 +1,4 @@
-import { Student } from './app/student';
+import { Student } from './student';
 
 export class CurrentUser {
     studentId: Number;

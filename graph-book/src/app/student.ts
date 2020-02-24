@@ -7,5 +7,4 @@ export class Student {
 
     constructor(){   
     }
-    george = "geor";
 }

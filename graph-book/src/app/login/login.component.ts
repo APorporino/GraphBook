@@ -2,7 +2,9 @@ import { Component, OnInit,Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {Student} from '../student'
-import {CurrentUser} from "../../currentUser"
+import {CurrentUser} from "../currentUser"
+import {LoginService} from "../login.service"
+
 
 
 @Component({
@@ -28,11 +30,11 @@ export class LoginComponent implements OnInit {
   @Input() message='';
   y= CurrentUser.constant2();
 
-  public currentUser: CurrentUser;
+  public currentUser: Student;
 
   static constant2() { return "f"; }
   
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private data: LoginService) { }
 
   ngOnInit(): void {
   }
@@ -40,11 +42,12 @@ export class LoginComponent implements OnInit {
     let body = new HttpParams();
     body = body.set('email', this.signIn.email);
     body = body.set('password', this.signIn.password);
-    this.http.get<CurrentUser>('http://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
+    this.http.get<Student>('http://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
       console.log(data);
       if (data!= null){
         this.currentUser=data;
         console.log(this.currentUser)
+        this.data.changeMessage(this.currentUser);
 
       }
   });}
