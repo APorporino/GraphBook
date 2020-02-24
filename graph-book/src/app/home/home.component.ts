@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
     }
     
     ngOnInit() {
+      this.getUsers();
       this.data.currentUser.subscribe(user=>this.currentUser=user)
       this.data.currentToken.subscribe(token=>this.loginToken=token)
       console.log(this.loginToken);
