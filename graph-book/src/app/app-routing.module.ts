@@ -6,6 +6,7 @@ import {AboutComponent} from "./about/about.component"
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ConnectionComponent } from './connection/connection.component';
+import {AuthGuard} from "./auth.guard"
 
 
 const routes: Routes = [
@@ -13,7 +14,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'login', component: LoginComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'home', component: HomeComponent},
+  {path: 'home', component: HomeComponent, canActivate:[AuthGuard]},
   {path: 'connect', component: ConnectionComponent},
 ];
 

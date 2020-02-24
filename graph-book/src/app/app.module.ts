@@ -13,6 +13,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ConnectionComponent } from './connection/connection.component';
 import { MaterialModule } from './material.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {AuthGuard} from "./auth.guard"
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
         this.currentUser=data;
         console.log(this.currentUser)
         this.data.changeMessage(this.currentUser);
+        this.data.loggedIn(this.currentUser.studentId);
 
       }
   });}

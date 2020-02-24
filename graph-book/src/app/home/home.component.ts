@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   readonly pageUrl = 'http://graphbook-backend.herokuapp.com/students';
   users: any; 
   currentUser: Student;
+  loginToken: boolean;
   
   constructor(private http:HttpClient, private data: LoginService) { }
     
@@ -36,6 +37,8 @@ export class HomeComponent implements OnInit {
     
     ngOnInit() {
       this.data.currentUser.subscribe(user=>this.currentUser=user)
+      this.data.currentToken.subscribe(token=>this.loginToken=token)
+      console.log(this.loginToken);
     }
 
 }

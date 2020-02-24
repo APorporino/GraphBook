@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {LoginService} from "./login.service"
 
 @Component({
   selector: 'app-root',
@@ -21,14 +22,14 @@ export class AppComponent {
     });
   }
 }
-
+import {Router} from '@angular/router';
 @Component({
   selector: 'logout-dialog',
   templateUrl: 'logout-dialog.html',
 })
 export class LogoutDialog {
   constructor(
-      public dialogRef: MatDialogRef<LogoutDialog>) {}
+      public dialogRef: MatDialogRef<LogoutDialog>, private data: LoginService,private router: Router) {}
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -36,6 +37,9 @@ export class LogoutDialog {
   //TODO: MUST TIE TO BACKEND TO ACTUALLY LOGOUT
   logout(): void {
     this.dialogRef.close();
+    this.data.loggedIn(-1);
+    this.router.navigate(["./login"])
+
   }
 
 }
