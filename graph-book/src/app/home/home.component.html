@@ -1,7 +1,11 @@
 <button (click)='getUsers()'>Get Users</button>
+<div class="card-list ">
+    <div *ngFor="let user of users | async ">
+        <app-connection [user]="user"></app-connection>
+    </div>
+</div>
 
-
-<div *ngFor="let user of users | async ">
+<!-- <div *ngFor="let user of users | async ">
     <h3>ID: {{user.studentId}} - First Name: {{ user.studentFirstName | json}}</h3>
     <p *ngIf="user.avatar; else random">
         {{user.avatar}}
@@ -28,4 +32,4 @@
 
 <h1>{{currentUser.studentId}}</h1>
 <h1>{{currentUser.firstName}}</h1>
-<h1>{{currentUser.emailAddress}}</h1>
+<h1>{{currentUser.emailAddress}}</h1> -->

@@ -7,6 +7,7 @@ import {LoginComponent} from "../login/login.component"
 import {CurrentUser} from "../currentUser"
 import {LoginService} from "../login.service"
 import { Student } from '../student';
+import {ConnectionComponent} from "../connection/connection.component"
 
 
 @Component({
@@ -28,7 +29,6 @@ export class HomeComponent implements OnInit {
     getUsers(): Observable<Object>{
       console.log("get users() works!")
       return this.users = this.http.get(this.pageUrl)
-      
     }
 
     getAllPosts(): Observable<Object>{

@@ -9,7 +9,6 @@ import { Input } from '@angular/core';
 })
 export class ConnectionComponent implements OnInit {
  
-  @Input() item;
   @Input() user;
   constructor() { }
 

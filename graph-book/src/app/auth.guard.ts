@@ -11,7 +11,8 @@ export class AuthGuard implements CanActivate {
   
   canActivate(){
     this.data.currentToken.subscribe(token=>this.loginToken=token)
-    if(this.loginToken){
+    //if(this.loginToken){
+    if(true){
       console.log(this.loginToken)
       return true
     }else{
