@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     let body = new HttpParams();
     body = body.set('email', this.signIn.email);
     body = body.set('password', this.signIn.password);
-    this.http.get<Student>('http://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
+    this.http.get<Student>('https://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
       console.log(data);
       if (data!= null){
         this.currentUser=data;
@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
     body = body.set('studentId', this.signUpInfo.studentId);
     body = body.set('emailAddress', this.signUpInfo.emailAddress);
     body = body.set('password', this.signUpInfo.password);
-    this.http.post('http://graphbook-backend.herokuapp.com/students/createStudent',body).subscribe(data => {
+    this.http.post('https://graphbook-backend.herokuapp.com/students/createStudent',body).subscribe(data => {
       console.log(data);
       this.message = "Your Account Has Been Created, Please Sign in"
     },

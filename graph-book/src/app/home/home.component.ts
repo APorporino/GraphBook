@@ -19,7 +19,7 @@ import {ConnectionComponent} from "../connection/connection.component"
 @Injectable({providedIn:'root'})
 export class HomeComponent implements OnInit {
 
-  readonly pageUrl = 'http://graphbook-backend.herokuapp.com/students';
+  readonly pageUrl = 'https://graphbook-backend.herokuapp.com/students';
   users: any; 
   currentUser: Student;
   loginToken: boolean;
