@@ -645,6 +645,12 @@ public class GraphBookService {
 		return edges;
 	}
 	
+	
+	public Edge getEdgeByEdgeId(long edgeId) {
+		Edge edge = edgeRepository.findByEdgeId(edgeId);
+		return edge;
+	}
+	
 	/**
 	 * Finds all edges for a given followee and status
 	 * @param status
