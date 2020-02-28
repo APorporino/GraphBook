@@ -19,8 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+
 import ca.mcgill.ecse428.graphbook.model.CourseOffering;
+import ca.mcgill.ecse428.graphbook.model.Edge.Status;
 import ca.mcgill.ecse428.graphbook.model.Student;
+import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 
 //@RunWith(SpringRunner.class)
@@ -38,7 +42,8 @@ public class TestServiceEdge {
 	public void deleteStudents() {
 		service.deleteAllCourseOfferings();
 		service.deleteAllCourses();
-		service.deleteAllStudents();	
+		service.deleteAllStudents();
+		service.deleteAllEdges();
 
 	}
 	
@@ -64,7 +69,30 @@ public class TestServiceEdge {
 		}
 
 		List<Student> students = service.getAllStudents();
-		assertEquals(1, students.size());
+		assertEquals(5, students.size());
+		
+		// create the edges
+		
+		try {
+			service.createEdge(studentIds[0], studentIds[1], Status.PENDING, 5, createdDate);	// edge between Jim and Dwight
+			service.createEdge(studentIds[0], studentIds[2], Status.PENDING, 5, createdDate);	// edge between Jim and Andy
+			service.createEdge(studentIds[1], studentIds[2], Status.PENDING, 5, createdDate);	// edge between Dwight and Andy
+			service.createEdge(studentIds[3], studentIds[0], Status.PENDING, 5, createdDate);	// edge between Micheal and Jim
+			service.createEdge(studentIds[4], studentIds[0], Status.PENDING, 5, createdDate);	// edge between Stanley and Jim
+			service.createEdge(studentIds[1], studentIds[4], Status.PENDING, 5, createdDate);	// edge between Dwight and Stanley
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		
+		List<Edge> edges = service.getAllEdges();
+		assertEquals(6, edges.size());
+		
+		// get Jim's edges
+		List<Edge> jimEdges = service.getEdgesByFollowerIdOrFolloweeId(studentIds[0], studentIds[0]);
+		
+		assertEquals(4,jimEdges.size());
+		assertEquals(studentIds[0], jimEdges.get(0).getFollowerId());
+		assertEquals(studentIds[1], jimEdges.get(0).getFolloweeId());
 		
 		
 	}
