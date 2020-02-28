@@ -23,10 +23,10 @@ import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 @CrossOrigin(origins = "*")
 @RestController
 public class GraphBookRestController {
-	
+
 	@Autowired
 	GraphBookService service;
-	
+
 	//--------STUDENT----------//
 	/**
 	 * Creates Student using service method createStudent with fields provided by request
@@ -34,43 +34,43 @@ public class GraphBookRestController {
 	 * @param lastName
 	 * @param emailAddress
 	 * @param password
-	 * 
+	 *
 	 * @return StudentDto StudentDto object for the newly created student
 	 * @throws IllegalArgumentException
 	 */
 	@PostMapping(value = { "/students/createStudent", "/students/createStudent/" })
-	public StudentDto createStudent(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, 
-			@RequestParam("studentId") long studentId, @RequestParam("password") String password, 
+	public StudentDto createStudent(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
+			@RequestParam("studentId") long studentId, @RequestParam("password") String password,
 			@RequestParam("emailAddress") String emailAddress) throws IllegalArgumentException {
-		
+
 		Date createdDate = new Date(Calendar.getInstance().getTimeInMillis());
 		Student student = service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
-		
+
 		return convertToDto(student);
 	}
-	
+
 	/**
 	 * Logs in a student
 	 * @param email
 	 * @param password
-	 * 
+	 *
 	 * @return StudentDto StudentDto object for the logged in student
 	 * @throws IllegalArgumentException if student credentials aren't correct or does not exist
 	 */
 	@GetMapping(value = { "/login", "/login/" })
 	public StudentDto login(@RequestParam("email") String email, @RequestParam("password") String password) throws IllegalArgumentException {
-		
+
 		Student student = service.login(email, password);
 		if (student == null) {
 			return null;
 		}
 		return convertToDto(student);
 	}
-	
+
 	/**
 	 * This method will update a users bio.
 	 * @param bio String representing the bio
-	 * 
+	 *
 	 * @return StudentDto object for updated student
 	 */
 	@PostMapping(value = { "/students/updateBio", "students/updateBio/" })
@@ -78,8 +78,8 @@ public class GraphBookRestController {
 		Student student = service.updateStudentBio(studentId, bio);
 		return convertToDto(student);
 	}
-	
-	
+
+
 	/**
 	 * Gets a student by his unique studentId.
 	 * @param studentId
@@ -89,9 +89,9 @@ public class GraphBookRestController {
 	public StudentDto getStudentById(@RequestParam("studentId") long studentId) throws IllegalArgumentException {
 		Student student = service.getStudentByStudentId(studentId);
 		return convertToDto(student);
-		
+
 	}
-	
+
 	/**
 	 * Allows a student to update their email, provided the new email is not already taken
 	 * @param studentId
@@ -102,9 +102,9 @@ public class GraphBookRestController {
 	public StudentDto updateStudentEmail(@PathVariable long studentId, @RequestParam("newUsername") String newEmail) {
 		Student student = service.updateStudentEmailAddress(studentId, newEmail);
 		return convertToDto(student);
-		
+
 	}
-	
+
 	/**
 	 * Allows a student to update their avatar
 	 * @param studentId
@@ -127,32 +127,32 @@ public class GraphBookRestController {
 		for (Student student : service.getAllStudents()) {
 			students.add(convertToDto(student));
 		}
-		
+
 		return students;
-		
-	}	
-	
-	
-	
+
+	}
+
+
+
 	//---------COURSE----------//
-	
-	
-	
+
+
+
 	//------COURSE_OFFERING----//
-	
-	
-	
+
+
+
 	//----------EDGE-----------//
-	
-	
+
+
 	//---------------Convert To Domain Model Objects--------------//
-	
+
 
 	//---------------Convert To Data Transfer Objects--------------//
-	
+
 	public StudentDto convertToDto(Student student) {
 		StudentDto studentDto= new StudentDto();
-		
+
 		studentDto.setStudentFirstName(student.getFirstName());
 		studentDto.setStudentLastName(student.getLastName());
 		studentDto.setStudentId(student.getStudentId());
@@ -162,10 +162,10 @@ public class GraphBookRestController {
 		studentDto.setBio(student.getBio());
 		studentDto.setAvatar(student.getAvatar());
 		studentDto.setCourseOfferings(student.getCourseOfferings());
-		
+
 		return studentDto;
 	}
-	
-	
+
+
 
 }
