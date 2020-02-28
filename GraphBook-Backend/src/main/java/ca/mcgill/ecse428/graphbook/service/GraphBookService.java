@@ -3,6 +3,7 @@ package ca.mcgill.ecse428.graphbook.service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ import ca.mcgill.ecse428.graphbook.model.CourseOffering;
 import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Edge.Status;
 import ca.mcgill.ecse428.graphbook.model.Student;
+import ca.mcgill.ecse428.graphbook.util.DijkstraEdge;
+import ca.mcgill.ecse428.graphbook.util.DijkstraVertex;
 
 @Service
 public class GraphBookService {
@@ -645,6 +648,12 @@ public class GraphBookService {
 		return edges;
 	}
 	
+	
+	public Edge getEdgeByEdgeId(long edgeId) {
+		Edge edge = edgeRepository.findByEdgeId(edgeId);
+		return edge;
+	}
+	
 	/**
 	 * Finds all edges for a given followee and status
 	 * @param status
@@ -667,6 +676,23 @@ public class GraphBookService {
 		return edge;
 	}
 	
+	/**
+	 * Finds edge by followerId or followeeId
+	 * @param followerId
+	 * @param followeeId
+	 * @return Edge object
+	 */
+	public List<Edge> getEdgesByFollowerIdOrFolloweeId(long followerId, long followeeId) {
+		List<Edge> edges = edgeRepository.findByFollowerIdOrFolloweeId(followerId, followeeId);
+		return edges;
+	}
+	
+	/**
+	 * Deletes all the edges in the database
+	 */
+	public void deleteAllEdges() {
+		edgeRepository.deleteAll();
+	}
 	/**
 	 * Update the status of an edge to ACCEPTED or DECLINED, depending on the answer of the followee 
 	 * upon the reception of the relation invitation.
@@ -727,6 +753,35 @@ public class GraphBookService {
 		boolean isValid = emailAddress.matches(pattern);
 		
 		return isValid;
+	}
+	
+	/**
+	 * Implementation of Dijstra's algorithm to find the shortest path between two students. The shortest path
+	 * will maximize the weights of the edges connecting the students. The logic is that to get to any other student,
+	 * you should go through students with the highest connection (highest weight value);
+	 * 
+	 * @param studentId1
+	 * @param studentId2
+	 */
+	private void findShortestPath(long studentId1, long studentId2) {
+		
+		// get all the students and convert them to Dijkstra vertices
+		List<Student> allStudents = getAllStudents();
+		List<DijkstraVertex> allVertices = new ArrayList<DijkstraVertex>();
+		for(Student student: allStudents) {
+			String fullName = student.getFirstName() + " " + student.getLastName();
+			DijkstraVertex v = new DijkstraVertex(fullName);
+			
+			// we can now populate the edge list of specific vertex
+			List<Edge> studentEdges = this.getEdgesByFollowerIdOrFolloweeId(student.getStudentId(), student.getStudentId());
+			List<DijkstraEdge> edges = new ArrayList<DijkstraEdge>();
+			for(Edge edge : studentEdges) {
+				// convert the edge to a DijsktraEdge
+			}
+			
+		}
+		
+		// create all the 
 	}
 	
 	

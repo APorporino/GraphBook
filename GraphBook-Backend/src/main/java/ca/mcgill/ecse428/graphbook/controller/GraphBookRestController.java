@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse428.graphbook.dto.*;
+import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Student;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 
@@ -143,8 +144,53 @@ public class GraphBookRestController {
 
 
 	//----------EDGE-----------//
-
-
+	
+	/**
+	 * Create edge between follower and followee
+	 * @param followerId
+	 * @param followeeId
+	 * @param weight
+	 * @return EdgeDto
+	 * @throws IllegalArgumentException
+	 */
+	@PostMapping(value = { "/edges/createEdge", "/edges/createEdge/" })
+	public EdgeDto createEdge(@RequestParam("followerId") long followerId, @RequestParam("followeeId") long followeeId, 
+			@RequestParam("weight") int weight) throws IllegalArgumentException {
+		
+		Date createdDate = new Date(Calendar.getInstance().getTimeInMillis());
+		Edge edge = service.createEdge(followerId, followeeId, Edge.Status.PENDING, weight, createdDate);
+		return convertToDto(edge);
+	}
+	
+	/**
+	 * Accept Edge
+	 * @param edgeId
+	 * @return EdgeDto
+	 * @throws IllegalArgumentException
+	 */
+	@PostMapping(value = { "/edges/acceptEdge", "/edges/acceptEdge/" })
+	public EdgeDto acceptEdge(@RequestParam("edgeId") long edgeId) throws IllegalArgumentException {
+		Edge edge = service.getEdgeByEdgeId(edgeId);
+		edge.setStatus(Edge.Status.ACCEPTED);
+		return convertToDto(edge);
+	}
+	
+	/**
+	 * Decline Edge
+	 * @param edgeId
+	 * @return EdgeDto
+	 * @throws IllegalArgumentException
+	 */
+	@PostMapping(value = { "/edges/declineEdge", "/edges/declineEdge/" })
+	public EdgeDto declineEdge(@RequestParam("edgeId") long edgeId) throws IllegalArgumentException {
+		Edge edge = service.getEdgeByEdgeId(edgeId);
+		edge.setStatus(Edge.Status.DECLINED);
+		return convertToDto(edge);
+	}
+	
+	
+	
+	
 	//---------------Convert To Domain Model Objects--------------//
 
 
@@ -165,7 +211,19 @@ public class GraphBookRestController {
 
 		return studentDto;
 	}
-
-
+	
+	/**
+	 * Convert Edge to edgeDto
+	 * @param edge
+	 * @return EdgeDto
+	 */
+	public EdgeDto convertToDto(Edge edge) {
+		if(edge == null) return null;
+		EdgeDto edgeDto = new EdgeDto(edge.getEdgeId(), edge.getFollowerId(), 
+				edge.getFolloweeId(), String.valueOf(edge.getStatus()), edge.getWeight(), edge.getCreatedDate());
+		return edgeDto;
+	}
+	
+	
 
 }

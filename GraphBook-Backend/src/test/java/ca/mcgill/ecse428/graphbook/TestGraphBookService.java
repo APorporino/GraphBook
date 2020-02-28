@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Student;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
 
@@ -140,5 +141,51 @@ public class TestGraphBookService {
 		}
 
 		assertEquals(null, st);
+	}
+	
+	@Test
+	public void testCreateEdge() {
+		assertEquals(0, service.getAllEdges().size());
+		
+		long edgeId = 12345L;
+		long followerId = 123L;
+		long followeeId = 456L;
+		Edge.Status status = Edge.Status.PENDING;
+		int weight = 8;
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+		
+		try {
+			service.createEdge(followerId, followeeId, status, weight, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		assertEquals(1, service.getAllEdges().size());
+		assertEquals(12345L, service.getAllEdges().get(0).getEdgeId());
+		assertEquals(123L, service.getAllEdges().get(0).getFollowerId());
+		assertEquals(456L, service.getAllEdges().get(0).getFolloweeId());
+		assertEquals(8, service.getAllEdges().get(0).getWeight());
+
+	}
+	
+	@Test
+	public void testCreateEdgeSameId() {
+		assertEquals(0, service.getAllEdges().size());
+		
+		long edgeId = 12345L;
+		long followerId = 123L;
+		long followeeId = 456L;
+		Edge.Status status = Edge.Status.PENDING;
+		int weight = 8;
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+		Edge edge = null;
+		try {
+			edge = service.createEdge(followerId, followeeId, status, weight, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		assertEquals(null, edge);
+
 	}
 }
