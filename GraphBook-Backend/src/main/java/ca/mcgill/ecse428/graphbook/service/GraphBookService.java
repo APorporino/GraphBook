@@ -674,6 +674,17 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Finds edge by followerId or followeeId
+	 * @param followerId
+	 * @param followeeId
+	 * @return Edge object
+	 */
+	public List<Edge> getEdgeByFollowerIdOrFolloweeId(long studentId) {
+		List<Edge> edges = edgeRepository.findByFollowerIdOrFolloweeId(studentId);
+		return edges;
+	}
+	
+	/**
 	 * Update the status of an edge to ACCEPTED or DECLINED, depending on the answer of the followee 
 	 * upon the reception of the relation invitation.
 	 * @param followerId
