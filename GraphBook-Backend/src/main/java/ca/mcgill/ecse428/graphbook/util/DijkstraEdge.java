@@ -16,11 +16,15 @@ public class DijkstraEdge {
 	}
 
 	public DijkstraVertex getNeighbourOf(DijkstraVertex vertex) {
-		if(this.followee == vertex) {
+		if(this.followee.getStudentId() == vertex.getStudentId()) {
 			return follower;
 		} else {
 			return followee;
 		}
+	}
+	
+	public int getWeight() {
+		return this.weight;
 	}
 
 }
