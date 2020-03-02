@@ -143,6 +143,76 @@ public class GraphBookService {
 	}
 
 	/**
+	 * Finds all non connections of a student.
+	 * @return List of all students a user is not connected to
+	 */
+	@Transactional
+	public List<Student> getNonConnections(String email){
+		//list of all students
+		List<Student> nonConnections = studentRepository.findAll();
+		//our student
+		Student student = studentRepository.findByEmailAddress(email);
+		
+		long studentId = student.getStudentId();
+		
+		//will hold the ID's of the students followers and followee's
+		long[] followers = new long[1000];	
+		long[] following = new long[1000];  //max 2000 connections
+		
+		//search through all edges to get all connections for the student
+		for (Edge edge : edgeRepository.findAll()){
+			if (edge.getFolloweeId() == studentId) {
+				followers[followers.length - 1] = edge.getFollowerId();
+			}
+			else if (edge.getFollowerId() == studentId) {
+				following[following.length - 1] = edge.getFolloweeId();
+			}
+		}
+		
+		//go through all students and remove the student if there is a connection
+		for (Student stu : nonConnections) {
+			for (int i=0; i<followers.length; i++) {
+				if (stu.getStudentId() == followers[i]) {
+					nonConnections.remove(stu);
+				}
+			}
+			for (int i=0; i<following.length; i++) {
+				if (stu.getStudentId() == following[i]) {
+					nonConnections.remove(stu);
+				}
+			}
+		}
+		//remove the student since he cant be connected to himself
+		nonConnections.remove(student);
+		return nonConnections;	
+	}
+	
+	/**
+	 * Find all students a user is connected to.
+	 * @return List of all students a user is connected to
+	 */
+	public List<Student> getAllConnections(String email){
+		//list of all students
+		List<Student> connections = new ArrayList<Student>();
+		//our student
+		Student student = studentRepository.findByEmailAddress(email);
+
+		long studentId = student.getStudentId();
+		//search through all edges to get all connections for the student
+		for (Edge edge : edgeRepository.findAll()){
+			if (edge.getFolloweeId() == studentId) {
+				
+				connections.add(studentRepository.findByStudentId(edge.getFollowerId()));
+			}
+			else if (edge.getFollowerId() == studentId) {
+				connections.add(studentRepository.findByStudentId(edge.getFolloweeId()));
+			}
+		}
+		return connections;	
+
+	}
+	
+	/**
 	 * Will find a student by a students unique ID
 	 * 
 	 * @param studentId
