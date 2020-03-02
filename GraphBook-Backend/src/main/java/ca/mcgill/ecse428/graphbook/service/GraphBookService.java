@@ -146,6 +146,7 @@ public class GraphBookService {
 	 * Finds all non connections of a student.
 	 * @return List of all students a user is not connected to
 	 */
+	@Deprecated
 	@Transactional
 	public List<Student> getNonConnections(String email){
 		//list of all students
@@ -188,9 +189,36 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Finds all the students that are not yet connected to a specific student
+	 * @param studentId
+	 * @return All students not yet connected to the student.
+	 */
+	@Transactional
+	public List<Student> getNonConnections(long studentId){
+		
+		List<Student> nonConnections = studentRepository.findAll();
+		
+		/*
+		 * For all students, check if there exists an edge between the current student 
+		 * and the specified one. If so, remove it from the non connections.
+		 */
+		for(Student student : nonConnections) {
+			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, student.getStudentId()) != null) {
+				nonConnections.remove(student);
+			} else if (edgeRepository.findByFollowerIdAndFolloweeId(student.getStudentId(), studentId) != null) { 
+				nonConnections.remove(student);
+			}
+		}
+		
+		return nonConnections;
+	}
+	
+	/**
 	 * Find all students a user is connected to.
 	 * @return List of all students a user is connected to
 	 */
+	@Deprecated
+	@Transactional
 	public List<Student> getAllConnections(String email){
 		//list of all students
 		List<Student> connections = new ArrayList<Student>();
@@ -217,6 +245,7 @@ public class GraphBookService {
 	 * @param studentId
 	 * @return List of all students a user is connected to.
 	 */
+	@Transactional
 	public List<Student> getAllConnections(long studentId){
 		
 		List<Student> connections = new ArrayList<Student>();									// returned connections initialized
