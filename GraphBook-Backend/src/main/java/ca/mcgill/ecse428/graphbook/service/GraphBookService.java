@@ -895,6 +895,10 @@ public class GraphBookService {
 		/*
 		 * We can now display the shortest path found
 		 */
+		
+		if(target.getDistanceFromStart() == Integer.MAX_VALUE) {			// no path was found
+			return ("No path was exits. Just go talk to them.");
+		}
 
 		DijkstraVertex current = target;
 		int lengthOfPath = current.getDistanceFromStart();
