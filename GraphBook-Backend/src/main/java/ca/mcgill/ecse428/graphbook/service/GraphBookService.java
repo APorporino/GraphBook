@@ -756,7 +756,7 @@ public class GraphBookService {
 	}
 
 	/**
-	 * Implementation of Dijstra's algorithm to find the shortest path between two students. The shortest path
+	 * Implementation of Dijkstra's algorithm to find the shortest path between two students. The shortest path
 	 * will maximize the weights of the edges connecting the students. The logic is that to get to any other student,
 	 * you should go through students with the highest connection (highest weight value);
 	 * 
