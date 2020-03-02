@@ -213,6 +213,28 @@ public class GraphBookService {
 	}
 	
 	/**
+	 * Faster implementation of the find all students a user is connected to.
+	 * @param studentId
+	 * @return List of all students a user is connected to.
+	 */
+	public List<Student> getAllConnections(long studentId){
+		
+		List<Student> connections = new ArrayList<Student>();									// returned connections initialized
+				
+		List<Edge> edges = edgeRepository.findByFollowerIdOrFolloweeId(studentId, studentId);	// edges of the input student
+		
+		for(Edge e : edges) {
+			if(e.getFollowerId() == studentId) {
+				connections.add(studentRepository.findByStudentId(e.getFolloweeId()));			// we want the followee
+			} else {
+				connections.add(studentRepository.findByStudentId(e.getFollowerId()));			// we want the follower
+			}
+		}
+		
+		return connections;
+	}
+	
+	/**
 	 * Will find a student by a students unique ID
 	 * 
 	 * @param studentId
