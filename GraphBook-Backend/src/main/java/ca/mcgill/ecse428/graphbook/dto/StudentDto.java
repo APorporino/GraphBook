@@ -17,7 +17,6 @@ public class StudentDto {
 	private Date createdDate;
 	private String bio;
 	private String avatar;
-	private List<Edge> connections;
 	
 	public StudentDto() {
 		
@@ -32,7 +31,6 @@ public class StudentDto {
 		this.courseOfferings = courseOfferings;
 		this.createdDate = createdDate;
 		this.bio = bio;
-		this.connections = connections;
 	}
 	
 	public long getStudentId() {
@@ -93,14 +91,6 @@ public class StudentDto {
 	
 	public void setBio(String bio) {
 		this.bio = bio;
-	}
-	
-	public List<Edge> getConnections(){
-		return this.connections;
-	}
-	
-	public void setConnections(List<Edge> connections) {
-		this.connections = connections;
 	}
 	
 	public String getAvatar() {

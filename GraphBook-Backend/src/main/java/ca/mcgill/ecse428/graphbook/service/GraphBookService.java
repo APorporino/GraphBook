@@ -25,26 +25,26 @@ import ca.mcgill.ecse428.graphbook.util.DijkstraVertex;
 
 @Service
 public class GraphBookService {
-	
+
 	//Autowired repositories
-	
+
 	@Autowired
 	StudentRepository studentRepository;
-	
+
 	@Autowired
 	CourseRepository courseRepository;
-	
+
 	@Autowired
 	EdgeRepository edgeRepository;
-	
+
 	@Autowired
 	CourseOfferingRepository courseOfferingRepository;
-	
-	
-	
+
+
+
 	//-------GENERAL METHODS---//
-	
-	
+
+
 	/**
 	 * Login student by emailAddress
 	 * @param authenticationToken
@@ -60,9 +60,9 @@ public class GraphBookService {
 		}
 		return null;
 	}
-	
+
 	//--------STUDENT----------//
-	
+
 	/**
 	 * Create a new student
 	 * 
@@ -75,11 +75,11 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public Student createStudent(String firstName, String lastName, long studentId, String emailAddress, String password, Date createdDate) {
-		
+
 		Student student;
-		
+
 		String error = "";
-		
+
 		if(firstName == null) {
 			error += "First name must be specified! ";
 		}
@@ -104,19 +104,19 @@ public class GraphBookService {
 		else if (password.trim().equals("")) {
 			error += "Password must be specified! ";
 		}
-		
+
 		if (studentRepository.findByEmailAddress(emailAddress) != null) {
 			error += "Student with that email address already exists!";
 		}
 		if (studentRepository.findByStudentId(studentId) != null) {
 			error += "Student with that studentId already exists!";
 		}
-		
+
 		error = error.trim();
 		if(error.length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
-		
+
 		student = new Student();
 		student.setFirstName(firstName);
 		student.setLastName(lastName);
@@ -126,12 +126,12 @@ public class GraphBookService {
 		student.setCreatedDate(createdDate);
 		student.setBio(null);
 		student.setCourseOfferings(null);
-		
+
 		studentRepository.save(student);
-		
+
 		return student;
 	}
-	
+
 	/**
 	 * Finds all students
 	 * @return List of all student objects in the database
@@ -140,6 +140,127 @@ public class GraphBookService {
 	public List<Student> getAllStudents() {
 		List<Student> students = studentRepository.findAll();
 		return students;
+	}
+
+	/**
+	 * Finds all non connections of a student.
+	 * @return List of all students a user is not connected to
+	 */
+	@Deprecated
+	@Transactional
+	public List<Student> getNonConnections(String email){
+		//list of all students
+		List<Student> nonConnections = studentRepository.findAll();
+		//our student
+		Student student = studentRepository.findByEmailAddress(email);
+		
+		long studentId = student.getStudentId();
+		
+		//will hold the ID's of the students followers and followee's
+		long[] followers = new long[1000];	
+		long[] following = new long[1000];  //max 2000 connections
+		
+		//search through all edges to get all connections for the student
+		for (Edge edge : edgeRepository.findAll()){
+			if (edge.getFolloweeId() == studentId) {
+				followers[followers.length - 1] = edge.getFollowerId();
+			}
+			else if (edge.getFollowerId() == studentId) {
+				following[following.length - 1] = edge.getFolloweeId();
+			}
+		}
+		
+		//go through all students and remove the student if there is a connection
+		for (Student stu : nonConnections) {
+			for (int i=0; i<followers.length; i++) {
+				if (stu.getStudentId() == followers[i]) {
+					nonConnections.remove(stu);
+				}
+			}
+			for (int i=0; i<following.length; i++) {
+				if (stu.getStudentId() == following[i]) {
+					nonConnections.remove(stu);
+				}
+			}
+		}
+		//remove the student since he cant be connected to himself
+		nonConnections.remove(student);
+		return nonConnections;	
+	}
+	
+	/**
+	 * Finds all the students that are not yet connected to a specific student
+	 * @param studentId
+	 * @return All students not yet connected to the student.
+	 */
+	@Transactional
+	public List<Student> getNonConnections(long studentId){
+		
+		List<Student> nonConnections = studentRepository.findAll();
+		
+		/*
+		 * For all students, check if there exists an edge between the current student 
+		 * and the specified one. If so, remove it from the non connections.
+		 */
+		for(Student student : nonConnections) {
+			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, student.getStudentId()) != null) {
+				nonConnections.remove(student);
+			} else if (edgeRepository.findByFollowerIdAndFolloweeId(student.getStudentId(), studentId) != null) { 
+				nonConnections.remove(student);
+			}
+		}
+		
+		return nonConnections;
+	}
+	
+	/**
+	 * Find all students a user is connected to.
+	 * @return List of all students a user is connected to
+	 */
+	@Deprecated
+	@Transactional
+	public List<Student> getAllConnections(String email){
+		//list of all students
+		List<Student> connections = new ArrayList<Student>();
+		//our student
+		Student student = studentRepository.findByEmailAddress(email);
+
+		long studentId = student.getStudentId();
+		//search through all edges to get all connections for the student
+		for (Edge edge : edgeRepository.findAll()){
+			if (edge.getFolloweeId() == studentId) {
+				
+				connections.add(studentRepository.findByStudentId(edge.getFollowerId()));
+			}
+			else if (edge.getFollowerId() == studentId) {
+				connections.add(studentRepository.findByStudentId(edge.getFolloweeId()));
+			}
+		}
+		return connections;	
+
+	}
+	
+	/**
+	 * Faster implementation of the find all students a user is connected to.
+	 * @param studentId
+	 * @return List of all students a user is connected to.
+	 */
+	@Transactional
+	public List<Student> getAllConnections(long studentId){
+		
+		List<Student> connections = new ArrayList<Student>();									// returned connections initialized
+				
+		List<Edge> edges = edgeRepository.findByFollowerIdOrFolloweeId(studentId, studentId);	// edges of the input student
+		
+		for(Edge e : edges) {
+			if(e.getFollowerId() == studentId) {
+				connections.add(studentRepository.findByStudentId(e.getFolloweeId()));			// we want the followee
+			} else {
+				connections.add(studentRepository.findByStudentId(e.getFollowerId()));			// we want the follower
+			}
+		}
+		
+		return connections;
 	}
 	
 	/**
@@ -160,7 +281,7 @@ public class GraphBookService {
 		}
 		return student;
 	}
-	
+
 	/**
 	 * Finds list of students by their first name
 	 * @param firstName
@@ -178,7 +299,7 @@ public class GraphBookService {
 		}
 		return students;
 	}
-	
+
 	/**
 	 * Get all the students that take a course offering
 	 * @param courseOfferingId
@@ -197,7 +318,7 @@ public class GraphBookService {
 		}
 		return students;
 	}
-	
+
 	/**
 	 * Finds list of students by their last name
 	 * @param lastName
@@ -215,7 +336,7 @@ public class GraphBookService {
 		}
 		return students;
 	}
-	
+
 	/**
 	 * Finds list of students by firstName and lastName
 	 * @param firstName
@@ -234,7 +355,7 @@ public class GraphBookService {
 		}
 		return students;
 	}
-	
+
 	/**
 	 * Find student by unique email
 	 * @param email
@@ -252,7 +373,7 @@ public class GraphBookService {
 		}
 		return student;
 	}
-	
+
 	/**
 	 * Find student by unique email and password
 	 * @param email
@@ -271,7 +392,7 @@ public class GraphBookService {
 		}
 		return student;
 	}
-	
+
 	/**
 	 * Deletes student by student ID
 	 * @param studentId
@@ -290,7 +411,7 @@ public class GraphBookService {
 	public void deleteAllStudents() {
 		studentRepository.deleteAll();
 	}
-	
+
 	/**
 	 * Update a student's account email address
 	 * @param studentId
@@ -304,7 +425,7 @@ public class GraphBookService {
 		if(studentRepository.findByEmailAddress(emailAddress) != null) {
 			error += "Email address already exists.";
 		}
-		
+
 		if(error.length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
@@ -312,7 +433,7 @@ public class GraphBookService {
 		studentRepository.save(student);
 		return student;
 	}
-	
+
 	/**
 	 * Update a student's account password
 	 * @param studentId
@@ -326,7 +447,7 @@ public class GraphBookService {
 		studentRepository.save(student);
 		return student;
 	}
-	
+
 	/**
 	 * Updates a students bio.
 	 * 
@@ -338,9 +459,9 @@ public class GraphBookService {
 		student.setBio(bio);
 		studentRepository.save(student);
 		return student;
-		
+
 	}
-	
+
 	/**
 	 * Updates a students avatar.
 	 * 
@@ -353,7 +474,7 @@ public class GraphBookService {
 		studentRepository.save(student);
 		return student;
 	}
-	
+
 	/**
 	 * Updates a student's course offering list. If the student has no course offering taken yet, it will 
 	 * create a new list with this offering. Otherwise, it will append it to the list if the course offering was not 
@@ -368,12 +489,12 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public void updateStudentWithANewCourseOffering(long studentId, long courseOfferingId) {
-				
+
 		Student student = studentRepository.findByStudentId(studentId);
 		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
-		
+
 		Set<CourseOffering> currentCourseOfferings = student.getCourseOfferings();
-		
+
 		/*
 		 *  We will check if the course offering list for this student is null.
 		 *  If so, simply create a new list with the requested course offering.
@@ -383,19 +504,19 @@ public class GraphBookService {
 			// add the course offering to the list inside student
 			currentCourseOfferings = new HashSet<CourseOffering>();
 			currentCourseOfferings.add(courseOffering);
-						
+
 		}else {
-			
+
 			if(currentCourseOfferings.contains(courseOffering)) {
 				throw new IllegalArgumentException("This student is already taking this course offering!");			
 			} else {
 				currentCourseOfferings.add(courseOffering);
-				
+
 			}
 		}
-		
+
 		Set<Student> currentStudents = courseOffering.getStudents();
-		
+
 		if(currentStudents == null) {
 			currentStudents = new HashSet<Student>();
 			currentStudents.add(student);
@@ -406,14 +527,14 @@ public class GraphBookService {
 				currentStudents.add(student);
 			}
 		}
-		
+
 		studentRepository.save(student);
 		courseOfferingRepository.save(courseOffering);
 
 	}
-	
+
 	//---------COURSE----------//
-	
+
 	/**
 	 * Create a new Course.
 	 * @param courseId e.g. MATH240
@@ -423,25 +544,25 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public Course createCourse(String courseId, String name, Date createdDate) {
-		
+
 		Course course;
-		
+
 		/*
 		 * TODO
 		 * Error checking
 		 */
-		
+
 		course = new Course();
 		course.setCourseId(courseId);
 		course.setName(name);
 		course.setCreatedDate(createdDate);
-		
+
 		courseRepository.save(course);
-		
+
 		return course;
-		
+
 	}
-	
+
 	/**
 	 * Find All courses
 	 * @return List of Course objects
@@ -451,7 +572,7 @@ public class GraphBookService {
 		List<Course> courses = courseRepository.findAll();
 		return courses;
 	}
-	
+
 	/**
 	 * Find course by course ID
 	 * @param courseId
@@ -462,7 +583,7 @@ public class GraphBookService {
 		Course course = courseRepository.findByCourseId(courseId);
 		return course;
 	}
-	
+
 	/**
 	 * Find course by course name
 	 * @param name
@@ -473,7 +594,7 @@ public class GraphBookService {
 		Course course = courseRepository.findByName(name);
 		return course;
 	}
-	
+
 	/**
 	 * Deletes a course by course ID
 	 * @param courseId
@@ -485,7 +606,7 @@ public class GraphBookService {
 		courseRepository.delete(course);
 		return course;
 	}
-	
+
 	/**
 	 * Delete all the courses in the database.
 	 */
@@ -493,11 +614,11 @@ public class GraphBookService {
 	public void deleteAllCourses() {
 		courseRepository.deleteAll();
 	}
-	
-	
-	
+
+
+
 	//------COURSE_OFFERING----//
-	
+
 	/**
 	 * Create a new course offering.
 	 * @param semester
@@ -507,27 +628,27 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public CourseOffering createCourseOffering(String semester, Date createdDate, String courseId) {
-		
+
 		CourseOffering courseOffering;
-		
+
 		Course course = this.getCourseByCourseId(courseId);
-		
+
 		/*
 		 * TODO
 		 * Error checking
 		 */
-		
+
 		courseOffering = new CourseOffering();
 		courseOffering.setSemester(semester);
 		courseOffering.setCreatedDate(createdDate);
 		courseOffering.setCourse(course);
-		
+
 		courseOfferingRepository.save(courseOffering);
-		
+
 		return courseOffering;
-		
+
 	}
-	
+
 	/**
 	 * Finds Course Offering By Course Offering Id
 	 * @param courseOfferingId
@@ -538,7 +659,7 @@ public class GraphBookService {
 		CourseOffering courseOffering = courseOfferingRepository.findByCourseOfferingId(courseOfferingId);
 		return courseOffering;
 	}
-	
+
 	/**
 	 * Finds course offering by courseId
 	 * @param courseId
@@ -553,7 +674,7 @@ public class GraphBookService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Finds all the course offerings in the database.
 	 * @return All the course offerings in the database.
@@ -563,7 +684,7 @@ public class GraphBookService {
 		List<CourseOffering> courseOfferings = courseOfferingRepository.findAll();
 		return courseOfferings;
 	}
-	
+
 	/**
 	 * Delete course offering by courseOfferingId
 	 * @param courseOfferingId
@@ -575,7 +696,7 @@ public class GraphBookService {
 		courseOfferingRepository.delete(courseOffering);
 		return courseOffering;
 	}
-	
+
 	/**
 	 * Delete all the course offerings.
 	 */
@@ -583,11 +704,11 @@ public class GraphBookService {
 	public void deleteAllCourseOfferings(){
 		courseOfferingRepository.deleteAll();
 	}
-	
-	
-	
+
+
+
 	//----------EDGE-----------//
-	
+
 	/**
 	 * Create a new edge that represents the relationship between two students.
 	 * @param follower
@@ -599,10 +720,10 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public Edge createEdge(long followerId, long followeeId, Status status, int weight, Date createdDate) {
-		
+
 		Edge edge;
 		String error = "";
-		
+
 		if(studentRepository.findByStudentId(followerId) == null) {
 			error += "No student was found with the follower studentId.";
 		}
@@ -621,24 +742,24 @@ public class GraphBookService {
 		if(edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId) != null) {
 			error += "An edge connecting these two students already exists.";
 		}
-		
+
 		if (error.trim().length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
-		
+
 		edge = new Edge();
 		edge.setFollowerId(followerId);
 		edge.setFolloweeId(followeeId);
 		edge.setStatus(status);
 		edge.setWeight(weight);
 		edge.setCreatedDate(createdDate);
-		
+
 		edgeRepository.save(edge);
-		
+
 		return edge;
-		
+
 	}
-	
+
 	/**
 	 * Return all the existing edges currently in the database.
 	 * @return List of all edge objects in the DB.
@@ -647,13 +768,13 @@ public class GraphBookService {
 		List<Edge> edges = edgeRepository.findAll();
 		return edges;
 	}
-	
-	
+
+
 	public Edge getEdgeByEdgeId(long edgeId) {
 		Edge edge = edgeRepository.findByEdgeId(edgeId);
 		return edge;
 	}
-	
+
 	/**
 	 * Finds all edges for a given followee and status
 	 * @param status
@@ -664,7 +785,7 @@ public class GraphBookService {
 		List<Edge> edges = edgeRepository.findByStatusAndFolloweeId(status, followeeId);
 		return edges;
 	}
-	
+
 	/**
 	 * Finds edge by followerId and followeeId
 	 * @param followerId
@@ -675,7 +796,7 @@ public class GraphBookService {
 		Edge edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
 		return edge;
 	}
-	
+
 	/**
 	 * Finds edge by followerId or followeeId
 	 * @param followerId
@@ -686,7 +807,7 @@ public class GraphBookService {
 		List<Edge> edges = edgeRepository.findByFollowerIdOrFolloweeId(followerId, followeeId);
 		return edges;
 	}
-	
+
 	/**
 	 * Deletes all the edges in the database
 	 */
@@ -704,40 +825,40 @@ public class GraphBookService {
 	public Edge updateEdgeStatus(long followerId, long followeeId, Status status) {
 		String error = "";
 		Edge edge;
-		
+
 		if(studentRepository.findByStudentId(followerId) == null) {
 			error += "No student was found with the follower studentId.";
 		}
 		if(studentRepository.findByStudentId(followeeId) == null) {
 			error += "No student was found with the followee studentId.";
 		}
-		
+
 		edge = edgeRepository.findByFollowerIdAndFolloweeId(followerId, followeeId);
-		
+
 		if(edge == null) {
 			error += "No edge currently exists between these two students.";
 		}
 		if (status == Status.PENDING) {
 			error += "You can only change the status of an edge to ACCEPTED or DECLINED.";
 		}
-		
+
 		error = error.trim();
 		if(error.length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
-		
+
 		edge.setStatus(status);
-		
+
 		return edge;
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	//--------------UTIL---------------//
-	
+
 	private <T> List<T> toList(Iterable<T> iterable){
 		List<T> resultList = new ArrayList<T>();
 		for (T t : iterable) {
@@ -746,44 +867,225 @@ public class GraphBookService {
 		return resultList;
 
 	}
-	
+
 	public boolean validateEmailAddressFormat(String emailAddress) {
 		String pattern = "[\\w\\d\\._]+@[\\w]*\\.[\\w]{2,3}";
-		
+
 		boolean isValid = emailAddress.matches(pattern);
-		
+
 		return isValid;
 	}
-	
+
 	/**
-	 * Implementation of Dijstra's algorithm to find the shortest path between two students. The shortest path
+	 * Implementation of Dijkstra's algorithm to find the shortest path between two students. The shortest path
 	 * will maximize the weights of the edges connecting the students. The logic is that to get to any other student,
 	 * you should go through students with the highest connection (highest weight value);
 	 * 
-	 * @param studentId1
-	 * @param studentId2
+	 * @param startingId
+	 * @param targetId
 	 */
-	private void findShortestPath(long studentId1, long studentId2) {
-		
-		// get all the students and convert them to Dijkstra vertices
-		List<Student> allStudents = getAllStudents();
-		List<DijkstraVertex> allVertices = new ArrayList<DijkstraVertex>();
-		for(Student student: allStudents) {
-			String fullName = student.getFirstName() + " " + student.getLastName();
-			DijkstraVertex v = new DijkstraVertex(fullName);
-			
-			// we can now populate the edge list of specific vertex
-			List<Edge> studentEdges = this.getEdgesByFollowerIdOrFolloweeId(student.getStudentId(), student.getStudentId());
-			List<DijkstraEdge> edges = new ArrayList<DijkstraEdge>();
-			for(Edge edge : studentEdges) {
-				// convert the edge to a DijsktraEdge
+	public String findShortestPath(long startingId, long targetId) {
+
+		ArrayList<DijkstraVertex> allDijkstraVertices = new ArrayList<DijkstraVertex>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public int indexOf(Object o) {
+				assert o != null;
+
+				DijkstraVertex v = (DijkstraVertex) o;
+				for(int i = 0; i < this.size(); i++) {
+					if(this.get(i).getStudentId() == v.getStudentId()) {
+						return i;
+					}
+				}
+				return -1;
 			}
-			
+		};
+
+		DijkstraVertex starting = new DijkstraVertex(startingId);
+		DijkstraVertex target = new DijkstraVertex(targetId);
+
+		allDijkstraVertices.add(starting);
+		allDijkstraVertices.add(target);
+
+		List<Edge> allEdges = getAllEdges();
+
+		for(Edge e : allEdges) {
+			Student s1 = getStudentByStudentId(e.getFollowerId());
+			DijkstraVertex dijkstraFollower = new DijkstraVertex(s1.getStudentId());		// convert the student to its vertex representation
+
+			Student s2 = getStudentByStudentId(e.getFolloweeId());
+			DijkstraVertex dijkstraFollowee = new DijkstraVertex(s2.getStudentId());		// convert the student to its vertex representation
+
+			int weight = 10 - e.getWeight();												// the weight is reversed to get the shortest path			
+
+			int followerIndex = allDijkstraVertices.indexOf(dijkstraFollower);
+
+			if(followerIndex != -1) {
+				dijkstraFollower = allDijkstraVertices.get(followerIndex);					// if it exists, we want to modify the existing one
+			} else {
+				allDijkstraVertices.add(dijkstraFollower);									// if not, we add to the list of all vertices
+			}
+
+
+			int followeeIndex = allDijkstraVertices.indexOf(dijkstraFollowee);
+
+			if(followeeIndex != -1) {
+				dijkstraFollowee = allDijkstraVertices.get(followeeIndex);					// if it exists, we want to modify the existing one
+			} else {
+				allDijkstraVertices.add(dijkstraFollowee);									// if not, we add to the list of all vertices
+			}
+
+			DijkstraEdge dijkstraEdge = new DijkstraEdge(dijkstraFollower, dijkstraFollowee, weight);	// create the Dijkstra edge
+
+
+			dijkstraFollower.getEdges().add(dijkstraEdge);
+			dijkstraFollowee.getEdges().add(dijkstraEdge);
+		}
+
+
+		/* 
+		 * this is now the beginning of the proper Dijkstra algorithm
+		 */
+
+		ArrayList<DijkstraVertex> visited = new ArrayList<DijkstraVertex>() {
+
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * Overridden method to check if there is a vertex with the same full name
+			 */
+			@Override
+			public boolean contains(Object o) {
+				DijkstraVertex v = (DijkstraVertex) o;
+				boolean found = false;
+				for(DijkstraVertex pVertex : this) {
+					if(pVertex.getStudentId() == (v.getStudentId())) {
+						found = true;
+					}
+				}
+				return found;
+			}
+		};
+
+		ArrayList<DijkstraVertex> unvisited = new ArrayList<>(allDijkstraVertices);
+
+		starting.setDistanceFromStart(0);							// the starting vertex is at distance 0 from itself, all others at INF
+
+		while(unvisited.size() != 0) {
+
+			DijkstraVertex current = findLowestValue(unvisited);
+			System.out.println("Current : " + this.getStudentByStudentId(current.getStudentId()).getFirstName());
+			int currentDistFromStart = current.getDistanceFromStart();
+
+			// iterate over all the neighbours of the current vertex
+			if(current.getEdges() != null) {
+
+				for(DijkstraEdge dEdge : current.getEdges()) {
+					DijkstraVertex neighbour = dEdge.getNeighbourOf(current);
+
+					// make sure the vertex is not yet visited
+					if(visited.contains(neighbour)) {
+						continue;
+					}
+
+					System.out.println("Current neighbour: " + this.getStudentByStudentId(neighbour.getStudentId()).getFirstName());
+
+					int neighbourDistFromStart = neighbour.getDistanceFromStart();
+
+					System.out.println("current dist: " + currentDistFromStart);
+					System.out.println("neighbour dist: " + neighbourDistFromStart);
+					if(currentDistFromStart + dEdge.getWeight() < neighbourDistFromStart) {
+						System.out.println("Updating vertex\n");
+						neighbour.setDistanceFromStart(currentDistFromStart + dEdge.getWeight());
+						neighbour.setPreviousVertex(current);
+					}
+
+				}
+			}
+
+			printResults(allDijkstraVertices);
+
+			visited.add(current);
+			unvisited.remove(current);
+
+		}
+
+		/*
+		 * We can now display the shortest path found
+		 */
+		
+		if(target.getDistanceFromStart() == Integer.MAX_VALUE) {			// no path was found
+			return ("No path was exits. Just go talk to them.");
+		}
+
+		DijkstraVertex current = target;
+		int lengthOfPath = current.getDistanceFromStart();
+
+		String path = "";
+		while(current != null) {
+			Student s = this.getStudentByStudentId(current.getStudentId());
+			String sFullName = s.getFirstName() + " " + s.getLastName();
+			if(current != starting) {
+				path = " --> " + sFullName + path;
+			} else {
+				path = sFullName + path;
+			}
+			current = current.getPreviousVertex();
 		}
 		
-		// create all the 
+		String startingFullname = this.getStudentByStudentId(starting.getStudentId()).getFirstName();
+		startingFullname += " " + this.getStudentByStudentId(starting.getStudentId()).getLastName();
+		
+		String targetFullname = this.getStudentByStudentId(target.getStudentId()).getFirstName();
+		targetFullname += " " + this.getStudentByStudentId(target.getStudentId()).getLastName();
+		
+		System.out.println("The best path from " + startingFullname + " to " + targetFullname + " is :");
+		System.out.println(path);
+		System.out.println("Length of path = " + lengthOfPath);
+
+		return path;
+
 	}
-	
-	
-	
+
+	/**
+	 * Find the lowest distance from starting node inside all the unvisited vertices
+	 * 
+	 * @param unvisited
+	 * @return
+	 */
+	private static DijkstraVertex findLowestValue(List<DijkstraVertex> unvisited) {
+		DijkstraVertex record = unvisited.get(0);
+
+		for (DijkstraVertex v: unvisited) {
+			if( v.getDistanceFromStart() < record.getDistanceFromStart()) {
+				record = v;
+			}
+		}
+
+		return record;
+	}
+
+	private void printResults(List<DijkstraVertex> visited) {
+		for(DijkstraVertex vertex: visited) {
+			if(vertex.getPreviousVertex() == null){
+				Student st = getStudentByStudentId(vertex.getStudentId());
+				System.out.print("Vertex " + st.getFirstName() + " " + st.getLastName());
+				System.out.print(" -- dist = " + vertex.getDistanceFromStart());
+				System.out.print(" \n");
+			} else{
+				Student st = getStudentByStudentId(vertex.getStudentId());
+				Student prev = getStudentByStudentId(vertex.getPreviousVertex().getStudentId());
+				System.out.print("Vertex " + st.getFirstName() + " " + st.getLastName());
+				System.out.print(" -- dist = " + vertex.getDistanceFromStart());
+				System.out.print(" -- prev " + prev.getFirstName() + " " + prev.getLastName() + "\n");
+			}
+		}
+		System.out.println("\n\n\n");
+	}
+
+
+
 }

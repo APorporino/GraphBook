@@ -130,11 +130,37 @@ public class GraphBookRestController {
 		}
 
 		return students;
-
-	}
-
-
-
+		
+	}	
+	
+	/**
+	 * Gets all students a user is connected to.
+	 * @return List of students
+	 */
+	@GetMapping(value = { "/connections", "/connections/" })
+	public List<StudentDto> getAllConnections(@RequestParam("email") String email) throws IllegalArgumentException{
+		List<StudentDto> students = new ArrayList<>();
+		for (Student student : service.getAllConnections(email)) {
+			students.add(convertToDto(student));
+		}
+		return students;
+	}	
+	
+	/**
+	 * Gets all students except for students a user is already connected to.
+	 * @return List of students
+	 */
+	@GetMapping(value = { "/nonConnections", "/nonConnections/" })
+	public List<StudentDto> getNonConnections(@RequestParam("email") String email) throws IllegalArgumentException{
+		List<StudentDto> students = new ArrayList<>();
+		for (Student student : service.getNonConnections(email)) {
+			students.add(convertToDto(student));
+		}
+		return students;
+	}	
+	
+	
+	
 	//---------COURSE----------//
 
 

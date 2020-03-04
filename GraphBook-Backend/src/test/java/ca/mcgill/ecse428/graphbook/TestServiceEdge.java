@@ -97,6 +97,72 @@ public class TestServiceEdge {
 		
 	}
 	
+	@Test
+	public void findShortestPath() {
+		
+		// create 5 students 
+		assertEquals(0, service.getAllStudents().size());
+
+		String[] firstNames = {"Jim", "Dwight", "Andy", "Micheal", "Stanley"};
+		String[] lastNames = {"Halpert", "Schrute", "Bernard", "Scott", "Hudson"};
+		long[] studentIds = {255654211, 255654212, 255654213, 255654214, 255654215};
+		String[] emailAddresses = {"JH@mail.com", "DS@mail.com", "AB@mail.com", "MS@mail.com", "SH@mail.com",};
+		String[] passwords = {"jim", "dwight", "andy", "micheal", "stanley"};
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			for(int i = 0; i < 5; i++) {
+				service.createStudent(firstNames[i], lastNames[i], studentIds[i], emailAddresses[i], passwords[i], createdDate);
+			}
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		List<Student> students = service.getAllStudents();
+		assertEquals(5, students.size());
+		
+		// create the edges
+		
+		try {
+			
+			/*
+			 * 
+			 * 				  4					5
+			 * 		Jim -------------- Dwight-------Andy
+			 * 		 |				__/	 |		   /
+			 *  	 |		8  ____/	 | 		  /
+			 * 	   9 |	    __/		   8 |       / 	5
+			 * 		 |	 __/			 |      /
+			 * 		 |	/				 |   __/
+			 * 	  Micheal-------------Stanley
+			 * 				  9
+			 * 
+			 */
+			
+			service.createEdge(studentIds[0], studentIds[1], Status.PENDING, 4, createdDate);	// edge between Jim and Dwight
+			service.createEdge(studentIds[0], studentIds[3], Status.PENDING, 9, createdDate);	// edge between Jim and Micheal
+			service.createEdge(studentIds[1], studentIds[3], Status.PENDING, 8, createdDate);	// edge between Dwight and Micheal
+			service.createEdge(studentIds[1], studentIds[4], Status.PENDING, 8, createdDate);	// edge between Dwight and Stanley
+			service.createEdge(studentIds[1], studentIds[2], Status.PENDING, 5, createdDate);	// edge between Dwight and Andy
+			service.createEdge(studentIds[2], studentIds[4], Status.PENDING, 5, createdDate);	// edge between Andy and Stanley
+			service.createEdge(studentIds[3], studentIds[4], Status.PENDING, 9, createdDate);	// edge between Micheal and Stanley
+			
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		
+		
+		
+		List<Edge> edges = service.getAllEdges();
+		assertEquals(7, edges.size());
+		
+		// shortest path between Jim and Andy should be Jim -> Micheal -> Stanley -> Andy
+		String path = service.findShortestPath(studentIds[0], studentIds[2]);
+		
+		assertEquals("Jim Halpert --> Micheal Scott --> Stanley Hudson --> Andy Bernard", path.trim());
+		
+	}
+	
 	
 	
 	
