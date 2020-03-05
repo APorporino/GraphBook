@@ -4,6 +4,7 @@ import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {Student} from '../student'
 import {CurrentUser} from "../currentUser"
 import {LoginService} from "../login.service"
+import {Router} from '@angular/router';
 
 
 
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   static constant2() { return "f"; }
   
-  constructor(private http:HttpClient, private data: LoginService) { }
+  constructor(private http:HttpClient, private data: LoginService,private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -49,6 +50,7 @@ export class LoginComponent implements OnInit {
         console.log(this.currentUser)
         this.data.changeMessage(this.currentUser);
         this.data.loggedIn(this.currentUser.studentId);
+        this.router.navigate(["./profile"])
 
       }
   });}
@@ -62,6 +64,7 @@ export class LoginComponent implements OnInit {
     this.http.post('https://graphbook-backend.herokuapp.com/students/createStudent',body).subscribe(data => {
       console.log(data);
       this.message = "Your Account Has Been Created, Please Sign in"
+      this.router.navigate(["./profile"])
     },
     error => {
       this.error = error.error.message;

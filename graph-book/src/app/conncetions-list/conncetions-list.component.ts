@@ -21,7 +21,9 @@ export class ConncetionsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.data.currentUser.subscribe(user=>this.currentUser=user)
-    console.log(this.currentUser);
+    console.log(this.currentUser.emailAddress); 
   }
+
+  // TODO display cards
 
 }
