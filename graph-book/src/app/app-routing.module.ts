@@ -6,6 +6,7 @@ import {AboutComponent} from "./about/about.component"
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ConnectionComponent } from './connection/connection.component';
+import {ConncetionsListComponent} from './conncetions-list/conncetions-list.component'
 import {AuthGuard} from "./auth.guard"
 
 
@@ -15,7 +16,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'home', component: HomeComponent, canActivate:[AuthGuard]},
-  {path: 'connect', component: ConnectionComponent},
+  {path: 'connect', component: ConncetionsListComponent},
 ];
 
 @NgModule({

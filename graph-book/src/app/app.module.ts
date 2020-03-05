@@ -13,7 +13,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { ConnectionComponent } from './connection/connection.component';
 import { MaterialModule } from './material.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import {AuthGuard} from "./auth.guard"
+import {AuthGuard} from "./auth.guard";
+import { ConncetionsListComponent } from './conncetions-list/conncetions-list.component'
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {AuthGuard} from "./auth.guard"
     LoginComponent,
     ProfileComponent,
     ConnectionComponent,
+    ConncetionsListComponent,
   ],
   imports: [
     BrowserModule,
