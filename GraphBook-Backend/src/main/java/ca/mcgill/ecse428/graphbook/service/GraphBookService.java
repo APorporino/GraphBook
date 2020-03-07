@@ -730,6 +730,9 @@ public class GraphBookService {
 		if(studentRepository.findByStudentId(followeeId) == null) {
 			error += "No student was found with the followee studentId.";
 		}
+		if(followerId == followeeId) {
+			error += "The two students must be distinct.";
+		}
 		if (status == null) {
 			error += "An edge status needs to be specified upon creation.";
 		}
