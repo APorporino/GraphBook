@@ -14,5 +14,8 @@ export class ConnectionComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  onClickMe(){
+    console.log(this.user.emailAddress) // TODO Connection function.
+  }
 
 }

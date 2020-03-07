@@ -4,6 +4,7 @@ import {HttpClient, HttpClientModule,HttpParams} from "@angular/common/http";
 import {Student} from '../student'
 import {CurrentUser} from "../currentUser"
 import {LoginService} from "../login.service"
+import {Router} from '@angular/router';
 
 
 
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   static constant2() { return "f"; }
   
-  constructor(private http:HttpClient, private data: LoginService) { }
+  constructor(private http:HttpClient, private data: LoginService,private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -42,13 +43,14 @@ export class LoginComponent implements OnInit {
     let body = new HttpParams();
     body = body.set('email', this.signIn.email);
     body = body.set('password', this.signIn.password);
-    this.http.get<Student>('http://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
+    this.http.get<Student>('https://graphbook-backend.herokuapp.com/login',{ params: body}).subscribe(data => {
       console.log(data);
       if (data!= null){
         this.currentUser=data;
         console.log(this.currentUser)
         this.data.changeMessage(this.currentUser);
         this.data.loggedIn(this.currentUser.studentId);
+        this.router.navigate(["./profile"])
 
       }
   });}
@@ -59,9 +61,10 @@ export class LoginComponent implements OnInit {
     body = body.set('studentId', this.signUpInfo.studentId);
     body = body.set('emailAddress', this.signUpInfo.emailAddress);
     body = body.set('password', this.signUpInfo.password);
-    this.http.post('http://graphbook-backend.herokuapp.com/students/createStudent',body).subscribe(data => {
+    this.http.post('https://graphbook-backend.herokuapp.com/students/createStudent',body).subscribe(data => {
       console.log(data);
       this.message = "Your Account Has Been Created, Please Sign in"
+      this.router.navigate(["./profile"])
     },
     error => {
       this.error = error.error.message;

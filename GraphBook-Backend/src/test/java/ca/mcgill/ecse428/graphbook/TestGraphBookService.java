@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ca.mcgill.ecse428.graphbook.model.Course;
 import ca.mcgill.ecse428.graphbook.model.Edge;
 import ca.mcgill.ecse428.graphbook.model.Student;
 import ca.mcgill.ecse428.graphbook.service.GraphBookService;
@@ -188,4 +189,18 @@ public class TestGraphBookService {
 		assertEquals(null, edge);
 
 	}
+	
+	@Test
+	public void testCourseCreated() {
+		assertEquals(0, service.getAllEdges().size());
+		
+		try {
+			List<Course> courses = service.getAllCourses();
+
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+	}
+	
 }
