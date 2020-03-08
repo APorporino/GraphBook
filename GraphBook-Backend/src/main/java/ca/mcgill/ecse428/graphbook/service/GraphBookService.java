@@ -404,6 +404,19 @@ public class GraphBookService {
 		studentRepository.delete(student);
 		return student;
 	}
+	
+	/**
+	 * Deletes student by email
+	 * @param email
+	 * @return deleted Student object
+	 */
+	@Transactional
+	public Student deleteStudentByEmail(String email) {
+		Student student = studentRepository.findByEmailAddress(email);
+		studentRepository.delete(student);
+		return student;
+	}
+	
 	/**
 	 * Delete all students from the database
 	 */
