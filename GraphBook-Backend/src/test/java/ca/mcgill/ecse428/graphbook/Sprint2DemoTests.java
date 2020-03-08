@@ -201,24 +201,41 @@ public class Sprint2DemoTests {
 	@Test
 	public void testCreateEdge() {
 		assertEquals(0, service.getAllEdges().size());
-		
-		long edgeId = 12345L;
-		long followerId = 123L;
-		long followeeId = 456L;
+
+		// create the two students first 
+		String firstName = "Jimmy";
+		String firstName2 = "Micheal";
+		String lastName = "Flimmy";
+		String lastName2 = "Scott";
+		long studentId = 255654211;
+		long studentId2 = 255654212;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String emailAddress2 = "micheal.scott@gmail.com";
+		String password = "jimmy";
+		String password2 = "micheal";
+		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
+
+		try {
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
+		} catch(IllegalArgumentException e) {
+			fail();
+		}
+
+		long followerId = studentId;
+		long followeeId = studentId2;
 		Edge.Status status = Edge.Status.PENDING;
 		int weight = 8;
-		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
-		
+
 		try {
 			service.createEdge(followerId, followeeId, status, weight, createdDate);
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-		
+
 		assertEquals(1, service.getAllEdges().size());
-		assertEquals(12345L, service.getAllEdges().get(0).getEdgeId());
-		assertEquals(123L, service.getAllEdges().get(0).getFollowerId());
-		assertEquals(456L, service.getAllEdges().get(0).getFolloweeId());
+		assertEquals(studentId, service.getAllEdges().get(0).getFollowerId());
+		assertEquals(studentId2, service.getAllEdges().get(0).getFolloweeId());
 		assertEquals(8, service.getAllEdges().get(0).getWeight());
 
 	}
@@ -226,21 +243,41 @@ public class Sprint2DemoTests {
 	@Test
 	public void testCreateEdgeSameId() {
 		assertEquals(0, service.getAllEdges().size());
-		
-		long edgeId = 12345L;
-		long followerId = 123L;
-		long followeeId = 456L;
-		Edge.Status status = Edge.Status.PENDING;
-		int weight = 8;
+
+		// create the two students first 
+		String firstName = "Jimmy";
+		String firstName2 = "Micheal";
+		String lastName = "Flimmy";
+		String lastName2 = "Scott";
+		long studentId = 255654211;
+		long studentId2 = 255654212;
+		String emailAddress = "jimmy.flimmy@mail.com";
+		String emailAddress2 = "micheal.scott@gmail.com";
+		String password = "jimmy";
+		String password2 = "micheal";
 		Date createdDate = Date.valueOf(LocalDate.now(Clock.systemUTC()));
-		Edge edge = null;
+
 		try {
-			edge = service.createEdge(followerId, followeeId, status, weight, createdDate);
+			service.createStudent(firstName, lastName, studentId, emailAddress, password, createdDate);
+			service.createStudent(firstName2, lastName2, studentId2, emailAddress2, password2, createdDate);
 		} catch(IllegalArgumentException e) {
 			fail();
 		}
-		
-		assertEquals(null, edge);
+
+		long followerId = studentId;
+		long followeeId = studentId;
+		Edge.Status status = Edge.Status.PENDING;
+		int weight = 8;
+		Edge edge = null;
+		String error = "";
+		try {
+			edge = service.createEdge(followerId, followeeId, status, weight, createdDate);
+		} catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertEquals(0, service.getAllEdges().size());
+		assertEquals("The two students must be distinct.", error);
 
 	}
 	
