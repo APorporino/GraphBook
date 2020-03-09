@@ -13,3 +13,5 @@ graphbook-backend/bin/
 .classpath
 .settings
 .project
+graph-book/package-lock.json
+

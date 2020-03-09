@@ -157,7 +157,17 @@ public class GraphBookRestController {
 			students.add(convertToDto(student));
 		}
 		return students;
-	}	
+	}
+	
+	/**
+	 * Deletes a student matching the specified email
+	 * @param email
+	 * @throws IllegalArgumentException
+	 */
+	@PostMapping(value = {"/delete"})
+	public void deleteStudentByEmail(@RequestParam("email") String email) throws IllegalArgumentException{
+		service.deleteStudentByEmail(email);
+	}
 	
 	
 	

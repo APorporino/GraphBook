@@ -404,6 +404,19 @@ public class GraphBookService {
 		studentRepository.delete(student);
 		return student;
 	}
+	
+	/**
+	 * Deletes student by email
+	 * @param email
+	 * @return deleted Student object
+	 */
+	@Transactional
+	public Student deleteStudentByEmail(String email) {
+		Student student = studentRepository.findByEmailAddress(email);
+		studentRepository.delete(student);
+		return student;
+	}
+	
 	/**
 	 * Delete all students from the database
 	 */
@@ -729,6 +742,9 @@ public class GraphBookService {
 		}
 		if(studentRepository.findByStudentId(followeeId) == null) {
 			error += "No student was found with the followee studentId.";
+		}
+		if(followerId == followeeId) {
+			error += "The two students must be distinct.";
 		}
 		if (status == null) {
 			error += "An edge status needs to be specified upon creation.";
