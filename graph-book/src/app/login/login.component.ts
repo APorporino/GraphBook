@@ -51,7 +51,10 @@ export class LoginComponent implements OnInit {
         this.data.changeMessage(this.currentUser);
         this.data.loggedIn(this.currentUser.studentId);
         this.router.navigate(["./profile"])
-
+      }
+      else {
+        this.signIn.email = ''
+        this.signIn.password = ''
       }
   });}
   createUser(){
@@ -68,6 +71,7 @@ export class LoginComponent implements OnInit {
     },
     error => {
       this.error = error.error.message;
+      this.signUpInfo.emailAddress =this.signUpInfo.studentId = this.signUpInfo.firstName = this.signUpInfo.lastName=this.signUpInfo.password='';
       }
     );
   }
