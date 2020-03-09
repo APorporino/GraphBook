@@ -1034,7 +1034,7 @@ public class GraphBookService {
 		 */
 		
 		if(target.getDistanceFromStart() == Integer.MAX_VALUE) {			// no path was found
-			return ("No path was exits. Just go talk to them.");
+			return ("No path exists. Just go talk to them.");
 		}
 
 		DijkstraVertex current = target;
