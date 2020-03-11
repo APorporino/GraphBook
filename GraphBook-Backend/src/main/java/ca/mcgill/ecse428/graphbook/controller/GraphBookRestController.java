@@ -237,8 +237,8 @@ public class GraphBookRestController {
 	public StudentDto convertToDto(Student student) {
 		StudentDto studentDto= new StudentDto();
 
-		studentDto.setStudentFirstName(student.getFirstName());
-		studentDto.setStudentLastName(student.getLastName());
+		studentDto.setFirstName(student.getFirstName());
+		studentDto.setLastName(student.getLastName());
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setEmailAddress(student.getEmailAddress());
 		studentDto.setCreatedDate(student.getCreatedDate());
