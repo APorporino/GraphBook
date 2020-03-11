@@ -197,17 +197,18 @@ public class GraphBookService {
 	public List<Student> getNonConnections(long studentId){
 		
 		List<Student> nonConnections = studentRepository.findAll();
+		
 		System.out.println("IHIDIJIDJ");
 		/*
 		 * For all students, check if there exists an edge between the current student 
 		 * and the specified one. If so, remove it from the non connections.
 		 */
-		for(Student student : nonConnections) {
+		for(int i = 0; i < nonConnections.size(); i++) {
 			
-			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, student.getStudentId()) != null) {
-				nonConnections.remove(student);
-			} else if (edgeRepository.findByFollowerIdAndFolloweeId(student.getStudentId(), studentId) != null) { 
-				nonConnections.remove(student);
+			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, nonConnections.get(i).getStudentId()) != null) {
+				nonConnections.remove(i);
+			} else if (edgeRepository.findByFollowerIdAndFolloweeId(nonConnections.get(i).getStudentId(), studentId) != null) { 
+				nonConnections.remove(i);
 			}
 		}
 		System.out.println("krnij");

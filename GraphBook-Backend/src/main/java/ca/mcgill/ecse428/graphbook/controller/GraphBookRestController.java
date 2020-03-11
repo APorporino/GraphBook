@@ -131,7 +131,16 @@ public class GraphBookRestController {
 
 		return students;
 		
-	}	
+	}
+	
+	/**
+	 * Get a student by email address
+	 */
+	@GetMapping(value = {"/students/studentByEmail", "/students/studentByEmail/"})
+	public StudentDto getStudentByEmailAddress(@RequestParam("email") String email) throws IllegalArgumentException{
+		Student student = service.getStudentByEmailAddress(email);
+		return convertToDto(student);
+	}
 	
 	/**
 	 * Gets all students a user is connected to.
@@ -148,7 +157,7 @@ public class GraphBookRestController {
 	}	
 	
 	/**
-	 * Gets all students except for students a user is already connected to.
+	 * Gets all students except for students a user is not yet connected to.
 	 * @return List of students
 	 */
 	@GetMapping(value = { "/nonConnections", "/nonConnections/" })
@@ -211,6 +220,16 @@ public class GraphBookRestController {
 		Edge edge = service.getEdgeByEdgeId(edgeId);
 		edge.setStatus(Edge.Status.ACCEPTED);
 		return convertToDto(edge);
+	}
+	
+	@GetMapping(value = {"/edges", "/edges/"})
+	public List<EdgeDto> getAllEdges() throws IllegalArgumentException {
+		List<EdgeDto> edges = new ArrayList<>();
+		for (Edge edge : service.getAllEdges()) {
+			edges.add(convertToDto(edge));
+		}
+
+		return edges;
 	}
 	
 	/**
