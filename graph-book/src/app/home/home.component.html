@@ -1,7 +1,7 @@
 <!-- <button (click)='getUsers()'>Get Users</button>-->
 <div class="card-list ">
     <div *ngFor="let user of users | async ">
-        <app-connection [user]="user"></app-connection>
+        <app-connection [user]="user" [connect]='true'></app-connection>
     </div>
 </div>
 

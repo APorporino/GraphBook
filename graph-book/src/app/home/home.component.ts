@@ -21,8 +21,10 @@ export class HomeComponent implements OnInit {
 
   readonly pageUrl = 'https://graphbook-backend.herokuapp.com/students';
   users: any; 
+  connect: true;
   currentUser: Student;
   loginToken: boolean;
+  // maybe add status
   
   constructor(private http:HttpClient, private data: LoginService) { }
     
