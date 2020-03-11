@@ -20,15 +20,21 @@ import {ConnectionComponent} from "../connection/connection.component"
 export class HomeComponent implements OnInit {
 
   readonly pageUrl = 'https://graphbook-backend.herokuapp.com/students';
+  //readonly pageUrl = 'https://graphbook-backend.herokuapp.com/nonConnections';
   users: any; 
+  connect: true;
   currentUser: Student;
   loginToken: boolean;
+ 
   
   constructor(private http:HttpClient, private data: LoginService) { }
     
     getUsers(): Observable<Object>{
       console.log("get users() works!")
+      let body = new HttpParams();
+      body = body.set('email', '1234');
       return this.users = this.http.get(this.pageUrl)
+      //return this.users = this.http.get(this.pageUrl, { params: body})
     }
 
     getAllPosts(): Observable<Object>{
@@ -36,9 +42,10 @@ export class HomeComponent implements OnInit {
     }
     
     ngOnInit() {
-      this.getUsers();
+      
       this.data.currentUser.subscribe(user=>this.currentUser=user)
       this.data.currentToken.subscribe(token=>this.loginToken=token)
+      this.getUsers();
       console.log(this.loginToken);
     }
 
