@@ -140,8 +140,9 @@ public class GraphBookRestController {
 	@GetMapping(value = { "/connections", "/connections/" })
 	public List<StudentDto> getAllConnections(@RequestParam("email") String email) throws IllegalArgumentException{
 		List<StudentDto> students = new ArrayList<>();
-		for (Student student : service.getAllConnections(email)) {
-			students.add(convertToDto(student));
+		Student student = service.getStudentByEmailAddress(email);
+		for (Student s : service.getAllConnections(student.getStudentId())) {
+			students.add(convertToDto(s));
 		}
 		return students;
 	}	
@@ -153,8 +154,9 @@ public class GraphBookRestController {
 	@GetMapping(value = { "/nonConnections", "/nonConnections/" })
 	public List<StudentDto> getNonConnections(@RequestParam("email") String email) throws IllegalArgumentException{
 		List<StudentDto> students = new ArrayList<>();
-		for (Student student : service.getNonConnections(email)) {
-			students.add(convertToDto(student));
+		Student student = service.getStudentByEmailAddress(email);
+		for (Student s : service.getNonConnections(student.getStudentId())) {
+			students.add(convertToDto(s));
 		}
 		return students;
 	}
