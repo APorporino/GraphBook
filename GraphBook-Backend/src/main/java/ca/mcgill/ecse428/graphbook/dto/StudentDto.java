@@ -42,20 +42,20 @@ public class StudentDto {
 	}
 	
 	
-	public String getStudentFirstName() {
+	public String getFirstName() {
 		return this.firstName;
 	}
 	
-	public void setStudentFirstName(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 	
 	
-	public String getStudentLastName() {
+	public String getLastName() {
 		return this.lastName;
 	}
 	
-	public void setStudentLastName(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 	

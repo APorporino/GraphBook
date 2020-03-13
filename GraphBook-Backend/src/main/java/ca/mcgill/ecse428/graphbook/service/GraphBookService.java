@@ -142,51 +142,6 @@ public class GraphBookService {
 		return students;
 	}
 
-	/**
-	 * Finds all non connections of a student.
-	 * @return List of all students a user is not connected to
-	 */
-	@Deprecated
-	@Transactional
-	public List<Student> getNonConnections(String email){
-		//list of all students
-		List<Student> nonConnections = studentRepository.findAll();
-		//our student
-		Student student = studentRepository.findByEmailAddress(email);
-		
-		long studentId = student.getStudentId();
-		
-		//will hold the ID's of the students followers and followee's
-		long[] followers = new long[1000];	
-		long[] following = new long[1000];  //max 2000 connections
-		
-		//search through all edges to get all connections for the student
-		for (Edge edge : edgeRepository.findAll()){
-			if (edge.getFolloweeId() == studentId) {
-				followers[followers.length - 1] = edge.getFollowerId();
-			}
-			else if (edge.getFollowerId() == studentId) {
-				following[following.length - 1] = edge.getFolloweeId();
-			}
-		}
-		
-		//go through all students and remove the student if there is a connection
-		for (Student stu : nonConnections) {
-			for (int i=0; i<followers.length; i++) {
-				if (stu.getStudentId() == followers[i]) {
-					nonConnections.remove(stu);
-				}
-			}
-			for (int i=0; i<following.length; i++) {
-				if (stu.getStudentId() == following[i]) {
-					nonConnections.remove(stu);
-				}
-			}
-		}
-		//remove the student since he cant be connected to himself
-		nonConnections.remove(student);
-		return nonConnections;	
-	}
 	
 	/**
 	 * Finds all the students that are not yet connected to a specific student
@@ -195,49 +150,22 @@ public class GraphBookService {
 	 */
 	@Transactional
 	public List<Student> getNonConnections(long studentId){
-		
+		System.out.println(studentRepository.findAll().toString());
 		List<Student> nonConnections = studentRepository.findAll();
-		
+		nonConnections.remove(this.getStudentByStudentId(studentId));
 		/*
 		 * For all students, check if there exists an edge between the current student 
 		 * and the specified one. If so, remove it from the non connections.
 		 */
-		for(Student student : nonConnections) {
-			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, student.getStudentId()) != null) {
-				nonConnections.remove(student);
-			} else if (edgeRepository.findByFollowerIdAndFolloweeId(student.getStudentId(), studentId) != null) { 
-				nonConnections.remove(student);
+		for(int i=0; i < nonConnections.size(); i++) {
+			if(edgeRepository.findByFollowerIdAndFolloweeId(studentId, nonConnections.get(i).getStudentId()) != null) {
+				nonConnections.remove(i);
+			} else if (edgeRepository.findByFollowerIdAndFolloweeId(nonConnections.get(i).getStudentId(), studentId) != null) { 
+				nonConnections.remove(i);
 			}
 		}
 		
 		return nonConnections;
-	}
-	
-	/**
-	 * Find all students a user is connected to.
-	 * @return List of all students a user is connected to
-	 */
-	@Deprecated
-	@Transactional
-	public List<Student> getAllConnections(String email){
-		//list of all students
-		List<Student> connections = new ArrayList<Student>();
-		//our student
-		Student student = studentRepository.findByEmailAddress(email);
-
-		long studentId = student.getStudentId();
-		//search through all edges to get all connections for the student
-		for (Edge edge : edgeRepository.findAll()){
-			if (edge.getFolloweeId() == studentId) {
-				
-				connections.add(studentRepository.findByStudentId(edge.getFollowerId()));
-			}
-			else if (edge.getFollowerId() == studentId) {
-				connections.add(studentRepository.findByStudentId(edge.getFolloweeId()));
-			}
-		}
-		return connections;	
-
 	}
 	
 	/**

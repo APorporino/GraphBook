@@ -131,7 +131,16 @@ public class GraphBookRestController {
 
 		return students;
 		
-	}	
+	}
+	
+	/**
+	 * Get a student by email address
+	 */
+	@GetMapping(value = {"/students/studentByEmail", "/students/studentByEmail/"})
+	public StudentDto getStudentByEmailAddress(@RequestParam("email") String email) throws IllegalArgumentException{
+		Student student = service.getStudentByEmailAddress(email);
+		return convertToDto(student);
+	}
 	
 	/**
 	 * Gets all students a user is connected to.
@@ -140,21 +149,23 @@ public class GraphBookRestController {
 	@GetMapping(value = { "/connections", "/connections/" })
 	public List<StudentDto> getAllConnections(@RequestParam("email") String email) throws IllegalArgumentException{
 		List<StudentDto> students = new ArrayList<>();
-		for (Student student : service.getAllConnections(email)) {
-			students.add(convertToDto(student));
+		Student student = service.getStudentByEmailAddress(email);
+		for (Student s : service.getAllConnections(student.getStudentId())) {
+			students.add(convertToDto(s));
 		}
 		return students;
 	}	
 	
 	/**
-	 * Gets all students except for students a user is already connected to.
+	 * Gets all students except for students a user is not yet connected to.
 	 * @return List of students
 	 */
 	@GetMapping(value = { "/nonConnections", "/nonConnections/" })
 	public List<StudentDto> getNonConnections(@RequestParam("email") String email) throws IllegalArgumentException{
 		List<StudentDto> students = new ArrayList<>();
-		for (Student student : service.getNonConnections(email)) {
-			students.add(convertToDto(student));
+		Student student = service.getStudentByEmailAddress(email);
+		for (Student s : service.getNonConnections(student.getStudentId())) {
+			students.add(convertToDto(s));
 		}
 		return students;
 	}
@@ -211,6 +222,16 @@ public class GraphBookRestController {
 		return convertToDto(edge);
 	}
 	
+	@GetMapping(value = {"/edges", "/edges/"})
+	public List<EdgeDto> getAllEdges() throws IllegalArgumentException {
+		List<EdgeDto> edges = new ArrayList<>();
+		for (Edge edge : service.getAllEdges()) {
+			edges.add(convertToDto(edge));
+		}
+
+		return edges;
+	}
+	
 	/**
 	 * Decline Edge
 	 * @param edgeId
@@ -235,8 +256,8 @@ public class GraphBookRestController {
 	public StudentDto convertToDto(Student student) {
 		StudentDto studentDto= new StudentDto();
 
-		studentDto.setStudentFirstName(student.getFirstName());
-		studentDto.setStudentLastName(student.getLastName());
+		studentDto.setFirstName(student.getFirstName());
+		studentDto.setLastName(student.getLastName());
 		studentDto.setStudentId(student.getStudentId());
 		studentDto.setEmailAddress(student.getEmailAddress());
 		studentDto.setCreatedDate(student.getCreatedDate());
