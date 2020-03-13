@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
         this.signIn.password = ''
       }
   });}
-  createUser(){
+  createUser(){ // TODO add current user to this. 
     let body = new HttpParams();
     body = body.set('firstName', this.signUpInfo.firstName);
     body = body.set('lastName', this.signUpInfo.lastName);
