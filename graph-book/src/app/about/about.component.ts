@@ -12,6 +12,6 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {
   }
   send(){
-  // to be done soon
+  // to be done soont 
   }
 }
