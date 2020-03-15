@@ -5,7 +5,7 @@
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title>John Smith</mat-card-title>
         <mat-card-subtitle>I love dogs</mat-card-subtitle>
-        <div><button mat-stroked-button color="warn" type='submit' (click)="changeEmail()">Change Avatar</button></div>
+        <div><button mat-stroked-button color="warn" type='submit'>Change Avatar</button></div>
 
     </mat-card-header>
 
@@ -39,7 +39,7 @@
         </mat-expansion-panel-header>
 
         <mat-panel-description>
-            12313456
+            <h1>{{currentUser.studentId}}</h1>
         </mat-panel-description>
     </mat-expansion-panel>
 
@@ -50,7 +50,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-panel-description>
-            John Smith
+            <h1>{{currentUser.firstName}} {{currentUser.lastName}}</h1>
         </mat-panel-description>
     </mat-expansion-panel>
 
@@ -60,7 +60,7 @@
                 My email
             </mat-panel-title>
             <mat-panel-description>
-                john@email.com
+                <h1>{{currentUser.firstName}}</h1>
             </mat-panel-description>
 
         </mat-expansion-panel-header>
@@ -70,7 +70,7 @@
             <input matInput>
         </mat-form-field>
         <div>
-            <button mat-stroked-button color="warn" type='submit' (click)="changeEmail()">Save</button>
+            <button mat-stroked-button color="warn" type='submit'>Save</button>
         </div>
 
     </mat-expansion-panel>

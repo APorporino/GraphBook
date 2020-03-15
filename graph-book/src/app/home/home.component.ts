@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
       this.data.currentUser.subscribe(user=>this.currentUser=user)
       this.data.currentToken.subscribe(token=>this.loginToken=token)
       this.getUsers();
-      console.log(this.loginToken);
+      console.log(this.currentUser);
     }
 
 }
