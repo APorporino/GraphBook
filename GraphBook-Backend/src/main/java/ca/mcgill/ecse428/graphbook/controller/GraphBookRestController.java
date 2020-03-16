@@ -180,6 +180,14 @@ public class GraphBookRestController {
 		service.deleteStudentByEmail(email);
 	}
 	
+	@GetMapping(value = {"students/findShortestPath", "students/findShortestPath/"})
+	public String findShortestPath(@RequestParam("startingId") long startingId, @RequestParam("targetId") long targetId) {
+		
+		String path = "";
+		path = service.findShortestPath(startingId, targetId);
+		return path;
+		
+	}
 	
 	
 	//---------COURSE----------//
