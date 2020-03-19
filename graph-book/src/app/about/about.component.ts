@@ -11,5 +11,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  send(){
+  // to be done soont 
+  }
 }
