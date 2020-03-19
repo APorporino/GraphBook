@@ -19,8 +19,8 @@ import {ConnectionComponent} from "../connection/connection.component"
 @Injectable({providedIn:'root'})
 export class HomeComponent implements OnInit {
 
-  readonly pageUrl = 'https://graphbook-backend.herokuapp.com/students';
-  //readonly pageUrl = 'https://graphbook-backend.herokuapp.com/nonConnections';
+  //readonly pageUrl = 'https://graphbook-backend.herokuapp.com/students';
+  readonly pageUrl = 'https://graphbook-backend.herokuapp.com/nonConnections';
   users: any; 
   connect: true;
   currentUser: Student;
@@ -32,9 +32,10 @@ export class HomeComponent implements OnInit {
     getUsers(): Observable<Object>{
       console.log("get users() works!")
       let body = new HttpParams();
-      body = body.set('email', '1234');
-      return this.users = this.http.get(this.pageUrl)
-      //return this.users = this.http.get(this.pageUrl, { params: body})
+      body = body.set('email', this.currentUser.emailAddress);
+     // return this.users = this.http.get(this.pageUrl)
+      return this.users = this.http.get(this.pageUrl, { params: body})
+      
     }
 
     getAllPosts(): Observable<Object>{
